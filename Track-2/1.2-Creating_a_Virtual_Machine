@@ -1,0 +1,9 @@
+
+export PROJECT=$GOOGLE_CLOUD_PROJECT
+gcloud compute instances create gcelab --project=$PROJECT --zone=us-central1-f --machine-type=n1-standard-2 --network-interface=network-tier=PREMIUM,subnet=default --maintenance-policy=MIGRATE --service-account=227490712284-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --tags=http-server --create-disk=auto-delete=yes,boot=yes,device-name=gcela,image=projects/debian-cloud/global/images/debian-10-buster-v20210916,mode=rw,size=10,type=projects/$PROJECT/zones/us-central1-f/diskTypes/pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
+gcloud compute ssh gcelab --zone=us-central1-f -y
+sudo apt-get install nginx -y
+exit
+
+gcloud compute instances create gcelab2 --machine-type n1-standard-2 --zone us-central1-f 
+
