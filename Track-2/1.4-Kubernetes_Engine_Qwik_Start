@@ -5,4 +5,4 @@ kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1
 kubectl expose deployment hello-server --type=LoadBalancer --port 8080
 kubectl get service
 
-gcloud container clusters delete my-cluste
+gcloud container clusters delete my-cluster
