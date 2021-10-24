@@ -1,0 +1,10 @@
+gcloud services enable notebooks.googleapis.com
+gcloud compute images describe-from-family tf2-ent-2-3-cpu --project deeplearning-platform-release
+
+gcloud notebooks instances create instance-without-gpu \
+  --vm-image-project=deeplearning-platform-release \
+  --vm-image-family=tf2-ent-2-3-cpu \
+  --machine-type=n1-standard-2 \
+  --location=us-central1-a
+
+gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT   --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
