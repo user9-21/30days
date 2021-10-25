@@ -5,8 +5,8 @@ echo $INSTANCE
 echo $ZONE
 gcloud compute ssh $INSTANCE --zone=$ZONE
 
+gcloud services enable apikeys.googleapis.com
 gcloud alpha services api-keys create --display-name="test"	
-
 
 export add=$(gcloud alpha services api-keys list --filter='DISPLAY_NAME: test'  --format='value(NAME)')
 echo $add	
