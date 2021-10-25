@@ -1,9 +1,7 @@
-gcloud compute ssh linux-instance --zone us-central1-a  --quiet
-
 gcloud services enable language.googleapis.com
 gcloud services enable apikeys.googleapis.com
-gcloud alpha services api-keys create --display-name="test"
-export add=$(gcloud alpha services api-keys list --filter='DISPLAY_NAME: test'  --format='value(NAME)')
+gcloud alpha services api-keys create --display-name="API KEY 1"
+export add=$(gcloud alpha services api-keys list --filter='DISPLAY_NAME: API KEY 1'  --format='value(NAME)')
 echo $add	
 export API_KEY=$(gcloud alpha services api-keys get-key-string $add --format='value(keyString)')
 echo $API_KEY
@@ -16,6 +14,7 @@ cat > request.json <<EOF
   "encodingType":"UTF8"
 }
 EOF
+
 curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
   -s -X POST -H "Content-Type: application/json" --data-binary @request.json > result.json
 cat result.json
