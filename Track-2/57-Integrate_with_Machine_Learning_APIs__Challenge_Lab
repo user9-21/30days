@@ -4,6 +4,7 @@ gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID --member=serviceAcco
 gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID --member=serviceAccount:$SANAME@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com --role=roles/storage.admin
 gcloud iam service-accounts keys create sa-key.json --iam-account $SANAME@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com
 export GOOGLE_APPLICATION_CREDENTIALS=${PWD}/sa-key.json
+echo $GOOGLE_APPLICATION_CREDENTIALS
 gsutil cp gs://$DEVSHELL_PROJECT_ID/analyze-images.py .
 
 cat > analyze-images.py <<EOF
@@ -218,6 +219,11 @@ assert errors == []
 
 EOF
 
+export GOOGLE_APPLICATION_CREDENTIALS=${PWD}/sa-key.json
+echo $GOOGLE_APPLICATION_CREDENTIALS
+
 python3 analyze-images.py $DEVSHELL_PROJECT_ID $DEVSHELL_PROJECT_ID
+
+
 
 bq query --use_legacy_sql=false \ 'SELECT locale,COUNT(locale) as lcount FROM image_classification_dataset.image_text_detail GROUP BY locale ORDER BY lcount DESC'
