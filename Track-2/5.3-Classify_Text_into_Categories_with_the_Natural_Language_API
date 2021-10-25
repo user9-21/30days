@@ -69,3 +69,4 @@ python3 classify-text.py
 
 
 # now go and create an api key manually to get the marks
+echo https://console.cloud.google.com/apis/credentials
