@@ -1,0 +1,47 @@
+gcloud pubsub topics create iotlab
+export EMAIL=cloud-iot@system.gserviceaccount.com
+gcloud beta pubsub topics add-iam-policy-binding iotlab\
+    --role roles/pubsub.publisher --member serviceAccount:$EMAIL
+bq mk iotlabdataset
+bq mk \
+  -t \
+  --label organization:development \
+  iotlabdataset.sensordata \
+  timestamp:TIMESTAMP,device:STRING,temperature:FLOAT
+gsutil mb -l us gs://$GOOGLE_CLOUD_PROJECT-bucket
+gcloud services enable dataflow.googleapis.com
+gcloud dataflow jobs run iotlabflow --gcs-location gs://dataflow-templates-us-central1/latest/PubSub_to_BigQuery --region us-central1 --max-workers 2 --worker-machine-type n1-standard-1 --staging-location gs://$GOOGLE_CLOUD_PROJECT-bucket/tmp/ --parameters inputTopic=projects/$GOOGLE_CLOUD_PROJECT/topics/iotlab,outputTableSpec=$GOOGLE_CLOUD_PROJECT:iotlabdataset.sensordata
+
+gcloud dataflow jobs run iotlabflow --gcs-location gs://dataflow-templates-us-central1/latest/PubSub_to_BigQuery --region us-central1 --max-workers 2 --worker-machine-type n1-standard-1 --staging-location gs://$GOOGLE_CLOUD_PROJECT-bucket/tmp/ --parameters inputTopic=projects/$GOOGLE_CLOUD_PROJECT/topics/iotlab,outputTableSpec=$GOOGLE_CLOUD_PROJECT:iotlabdataset.sensordata
+
+
+gcloud compute instances list
+gcloud compute ssh iot-device-simulator --zone=us-central1-a
+
+sudo pip install virtualenv
+virtualenv -p python3 venv
+source venv/bin/activate
+sudo apt-get remove google-cloud-sdk -y
+curl https://sdk.cloud.google.com | bash
+
+gcloud init
+
+sudo apt-get install google-cloud-sdk
+sudo apt-get update
+sudo apt-get install python-pip openssl git -y
+pip install pyjwt paho-mqtt cryptography
+git clone http://github.com/GoogleCloudPlatform/training-data-analyst
+
+export PROJECT_ID=$GOOGLE_CLOUD_PROJECT
+export MY_REGION=us-central1
+gcloud beta iot registries create iotlab-registry    --project=$PROJECT_ID    --region=$MY_REGION    --event-notification-config=topic=projects/$PROJECT_ID/topics/iotlab
+cd $HOME/training-data-analyst/quests/iotlab/
+openssl req -x509 -newkey rsa:2048 -keyout rsa_private.pem     -nodes -out rsa_cert.pem -subj "/CN=unused"
+gcloud beta iot devices create temp-sensor-buenos-aires   --project=$PROJECT_ID   --region=$MY_REGION   --registry=iotlab-registry   --public-key path=rsa_cert.pem,type=rs256
+gcloud beta iot devices create temp-sensor-istanbul   --project=$PROJECT_ID   --region=$MY_REGION   --registry=iotlab-registry   --public-key path=rsa_cert.pem,type=rs256
+cd $HOME/training-data-analyst/quests/iotlab/
+wget https://pki.google.com/roots.pem
+python cloudiot_mqtt_example_json.py    --project_id=$PROJECT_ID    --cloud_region=$MY_REGION    --registry_id=iotlab-registry    --device_id=temp-sensor-buenos-aires    --private_key_file=rsa_private.pem    --message_type=event    --algorithm=RS256 > buenos-aires-log.txt 2>&1 &
+python cloudiot_mqtt_example_json.py    --project_id=$PROJECT_ID    --cloud_region=$MY_REGION    --registry_id=iotlab-registry    --device_id=temp-sensor-istanbul    --private_key_file=rsa_private.pem    --message_type=event    --algorithm=RS256
+
+bq query --use_legacy_sql=false 'SELECT timestamp, device, temperature from iotlabdataset.sensordata ORDER BY timestamp DESC LIMIT 100'
