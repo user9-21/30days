@@ -1,10 +1,3 @@
-gcloud compute instances list
-export INSTANCE=$(gcloud compute instances list --format='value(NAME)')
-export ZONE=$(gcloud compute instances list --format='value(ZONE)')
-echo $INSTANCE
-echo $ZONE
-gcloud compute ssh $INSTANCE --zone=$ZONE
-
 gcloud services enable apikeys.googleapis.com
 gcloud alpha services api-keys create --display-name="test"	
 
