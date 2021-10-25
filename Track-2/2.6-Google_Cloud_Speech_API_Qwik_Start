@@ -1,0 +1,30 @@
+gcloud compute instances list
+export INSTANCE=$(gcloud compute instances list --format='value(NAME)')
+export ZONE=$(gcloud compute instances list --format='value(ZONE)')
+echo $INSTANCE
+echo $ZONE
+gcloud compute ssh $INSTANCE --zone=$ZONE
+
+gcloud alpha services api-keys create --display-name="test"	
+
+
+export add=$(gcloud alpha services api-keys list --filter='DISPLAY_NAME: test'  --format='value(NAME)')
+echo $add	
+export API_KEY=$(gcloud alpha services api-keys get-key-string $add --format='value(keyString)')
+echo $API_KEY
+
+cat > request.json <<EOF
+{
+  "config": {
+      "encoding":"FLAC",
+      "languageCode": "en-US"
+  },
+  "audio": {
+      "uri":"gs://cloud-samples-tests/speech/brooklyn.flac"
+  }
+}
+EOF
+curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json \
+"https://speech.googleapis.com/v1/speech:recognize?key=${API_KEY}"
+curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json \
+"https://speech.googleapis.com/v1/speech:recognize?key=${API_KEY}" > result.json
