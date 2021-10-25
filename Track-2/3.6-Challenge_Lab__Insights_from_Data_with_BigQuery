@@ -270,18 +270,11 @@ GROUP BY date'
 
 cat > laststep.txt <<EOF
 
-# Copy this query and perform in datastudio
+# Now Copy this query and perform in datastudio
+# select custom query under bigquery, billing project as your project id in datastudio and generate the report.
 
-QUERY = 'SELECT
-  date, SUM(cumulative_confirmed) AS country_cases,
-  SUM(cumulative_deceased) AS country_deaths
-FROM
-  `bigquery-public-data.covid19_open_data.covid19_open_data`
-WHERE
-  date BETWEEN "2020-03-15"
-  AND "2020-04-30"
-  AND country_name ="United States of America"
-GROUP BY date'
+QUERY = 'SELECT date, SUM(cumulative_confirmed) AS country_cases, SUM(cumulative_deceased) AS country_deaths FROM "bigquery-public-data.covid19_open_data.covid19_open_data" WHERE date BETWEEN "2020-03-15"  AND "2020-04-30" AND country_name ="United States of America" GROUP BY date'
 EOF
 
+sed -i 's/"bigquery-public-data.covid19_open_data.covid19_open_data"/`bigquery-public-data.covid19_open_data.covid19_open_data`/g' laststep.txt
 cat laststep.txt
