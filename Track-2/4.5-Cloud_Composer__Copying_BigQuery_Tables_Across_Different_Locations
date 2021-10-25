@@ -1,0 +1,14 @@
+gsutil mb -l us gs://$GOOGLE_CLOUD_PROJECT-us
+gsutil mb -l eu gs://$GOOGLE_CLOUD_PROJECT-eu
+bq --location=eu mk nyc_tlc_EU
+sudo apt-get update
+sudo apt-get install virtualenv -y
+virtualenv -p python3 venv
+source venv/bin/activate
+gcloud composer environments create composer-advanced-lab --location=us-central1
+export DAGS_BUCKET=$(gcloud composer environments describe composer-advanced-lab --location=us-central1 --format='value(config.dagGcsPrefix)')
+echo $DAGS_BUCKET
+cd ~
+gsutil -m cp -r gs://spls/gsp283/python-docs-samples .
+gsutil cp python-docs-samples/composer/workflows/bq_copy_across_locations.py $DAGS_BUCKET
+gsutil cp python-docs-samples/composer/workflows/bq_copy_eu_to_us_sample.csv $DAGS_BUCKET
