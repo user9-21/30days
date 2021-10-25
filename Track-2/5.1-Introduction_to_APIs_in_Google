@@ -6,12 +6,7 @@ cat > values.json <<EOF
 EOF
 cat values.json
 
-
-#open : https://developers.google.com/oauthplayground/
-#Enter this in scope and click authorize API:  https://www.googleapis.com/auth/devstorage.full_control
-#Now login and Click on Exchange authorization code for tokens and copy the access tocken and paste in export OAUTH2_TOKEN=
-
-export OAUTH2_TOKEN=
+export OAUTH2_TOKEN=$(gcloud auth print-access-token)
 
 export PROJECT_ID=$GOOGLE_CLOUD_PROJECT
 echo $OAUTH2_TOKEN
