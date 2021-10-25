@@ -15,3 +15,9 @@ python -m apache_beam.examples.wordcount --project $DEVSHELL_PROJECT_ID \
   --temp_location $BUCKET/temp \
   --output $BUCKET/results/output \
   --region us-central1
+python -m apache_beam.examples.wordcount --project $DEVSHELL_PROJECT_ID \
+  --runner DataflowRunner \
+  --staging_location $BUCKET/staging \
+  --temp_location $BUCKET/temp \
+  --output $BUCKET/results/output \
+  --region us-central1
