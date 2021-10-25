@@ -15,7 +15,12 @@ curl -s -H 'Content-Type: application/json' \
     -H 'Authorization: Bearer '$(gcloud auth print-access-token)'' \
     'https://videointelligence.googleapis.com/v1/videos:annotate' \
     -d @request.json
-	
-curl -s -H 'Content-Type: application/json' \
-    -H 'Authorization: Bearer '$(gcloud auth print-access-token)'' \
-    'https://videointelligence.googleapis.com/v1/REPLACE_WITH_OUTPUT_FROM_PREVIOUS_COMMAND'
+
+cat > laststep.txt <<EOF	
+#
+# copy the path and replace below and perform it
+#
+curl -s -H 'Content-Type: application/json' -H 'Authorization: Bearer '$(gcloud auth print-access-token)'' \
+    'https://videointelligence.googleapis.com/v1/REPLACE_PATH_WITH_OUTPUT_FROM_PREVIOUS_COMMAND'
+EOF
+cat laststep.txt
