@@ -17,6 +17,7 @@ PROJECT=$(gcloud config get-value core/project)
 echo $PROJECT
 cd training-data-analyst/quests/dei/census
 
+# Copy PROJECT_ID and paste in the income_xgboost.ipynb file
 EOF
 ls
 cat laststep.sh
