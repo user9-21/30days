@@ -232,7 +232,8 @@ chmod +x 1.sh
 
 ```
 ## 6.4 
-```wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/6.4-Compare_Cloud_AI_Platform_Models_using_the_What-If_Tool_to_Identify_Potential_Bias
+```
+wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/6.4-Compare_Cloud_AI_Platform_Models_using_the_What-If_Tool_to_Identify_Potential_Bias
 chmod +x 1.sh
 ./1.sh
 
