@@ -1,18 +1,22 @@
 Track 2
 
 
-1.2 >>
+# 1.2 >>
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/1.2-Creating_a_Virtual_Machine
+
 chmod +x 1.sh
+
 ./1.sh
 
 
-1.3 >>
+# 1.3 >>
 gcloud compute instances create gcelab2 --machine-type n1-standard-2 --zone us-central1-a 
 
-1.4 >>
+# 1.4 >>
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/1.4-Kubernetes_Engine_Qwik_Start
+
 chmod +x 1.sh
+
 ./1.sh
 
 
@@ -48,14 +52,16 @@ chmod +x 1.sh
 ./1.sh
 
 
-2.5 >>
+# 2.5 >>
 gcloud compute ssh linux-instance --zone=us-central1-a 
 
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/2.5-Cloud_Natural_Language_API__Qwik_Start
+
 chmod +x 1.sh
+
 ./1.sh
 
-2.6 >>
+# 2.6 >>
 gcloud compute ssh linux-instance --zone us-central1-a
 
 in ssh
@@ -67,7 +73,7 @@ chmod +x 1.sh
 ./1.sh
 
 
-2.7 >>
+# 2.7 >>
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/2.7-Video_Intelligence__Qwik_Start
 
 chmod +x 1.sh
@@ -79,15 +85,19 @@ chmod +x 1.sh
 
 curl -s -H 'Content-Type: application/json' -H 'Authorization: Bearer '$(gcloud auth print-access-token)'' 'https://videointelligence.googleapis.com/v1/videos:annotate' -d @request.json
 
-3.1 >>
+# 3.1 >>
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/3.1-Introduction_to_SQL_for_BigQuery_and_Cloud_SQL
+
 chmod +x 1.sh
+
 ./1.sh
 
 
-3.2 >>
+# 3.2 >>
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/3.2-BigQuery__Qwik_Start-Command_Line
+
 chmod +x 1.sh
+
 ./1.sh
 
 
