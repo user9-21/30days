@@ -173,20 +173,20 @@ wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/ma
 chmod +x 1.sh
 ./1.sh
 
-6.2>>
+#6.2>>#
 gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT   --zone us-central1-a  qwiklabs-tensorflow-notebook -- -L 8080:localhost:8080
 
 
 git clone https://github.com/GoogleCloudPlatform/training-data-analyst
 
 
-6.3 >>
+# 6.3 >>
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/6.3-Identifying_Bias_in_Mortgage_Data_using_Cloud_AI_Platform_and_the_What-if_Tool
 chmod +x 1.sh
 ./1.sh
 
 
-6.4 >>
+# 6.4 >>
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/6.4-Compare_Cloud_AI_Platform_Models_using_the_What-If_Tool_to_Identify_Potential_Bias
 chmod +x 1.sh
 ./1.sh
