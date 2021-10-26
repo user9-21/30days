@@ -33,7 +33,7 @@ chmod +x 1.sh
 ./1.sh
 ```
 
-2.1
+## 2.1
 ```
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/2.1-AI_Platform__Qwik_Start
 chmod +x 1.sh
@@ -43,20 +43,20 @@ chmod +x 1.sh
 git clone https://github.com/GoogleCloudPlatform/training-data-analyst
 cd training-data-analyst/self-paced-labs/ai-platform-qwikstart
 ```
-2.3
+## 2.3
 ```
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/2.3-Dataflow__Qwik_Start-Python
 chmod +x 1.sh
 ./1.sh
 ```
-2.4 >>
+## 2.4
 ```
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/2.4-Dataproc__Qwik_Start-Command_Line
 chmod +x 1.sh
 ./1.sh
 ```
 
-# 2.5 >>
+## 2.5
 ```
 gcloud compute ssh linux-instance --zone=us-central1-a 
 ```
@@ -66,7 +66,7 @@ chmod +x 1.sh
 ./1.sh
 
 ```
-# 2.6 >>
+## 2.6
 ```
 gcloud compute ssh linux-instance --zone us-central1-a
 ```
@@ -77,7 +77,7 @@ chmod +x 1.sh
 ./1.sh
 
 ```
-# 2.7 >>
+## 2.7
 ```
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/2.7-Video_Intelligence__Qwik_Start
 chmod +x 1.sh
