@@ -7,7 +7,9 @@ sudo pip3 install --upgrade virtualenv
 virtualenv -p python3.7 env
 source env/bin/activate
 pip install apache-beam[gcp]
-python -m apache_beam.examples.wordcount --output OUTPUT_FILE
+
+
+python -m apache_beam.examples.wordcount --output outputfile
 BUCKET=gs://$GOOGLE_CLOUD_PROJECT
 python -m apache_beam.examples.wordcount --project $DEVSHELL_PROJECT_ID \
   --runner DataflowRunner \
@@ -15,9 +17,25 @@ python -m apache_beam.examples.wordcount --project $DEVSHELL_PROJECT_ID \
   --temp_location $BUCKET/temp \
   --output $BUCKET/results/output \
   --region us-central1
+  
+cat > laststep.sh <<EOF
+
+# If Dataflow job failed , try manually
+
+virtualenv -p python3.7 env
+source env/bin/activate
+pip install apache-beam[gcp]
+python -m apache_beam.examples.wordcount --output outputfile
+BUCKET=gs://$DEVSHELL_PROJECT_ID
 python -m apache_beam.examples.wordcount --project $DEVSHELL_PROJECT_ID \
   --runner DataflowRunner \
   --staging_location $BUCKET/staging \
   --temp_location $BUCKET/temp \
   --output $BUCKET/results/output \
-  --region us-central1
+  --region us-central1 \
+  --wait 120
+  
+  
+EOF
+cat laststep.sh  
+
