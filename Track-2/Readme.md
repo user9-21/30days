@@ -58,7 +58,7 @@ chmod +x 1.sh
 2.6 >>
 gcloud compute ssh linux-instance --zone us-central1-a
 
-# IN SSH
+in ssh
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/2.6-Google_Cloud_Speech_API_Qwik_Start
 chmod +x 1.sh
 ./1.sh
@@ -68,7 +68,7 @@ wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/ma
 chmod +x 1.sh
 ./1.sh
 
-# Replace URL WITH PREVIOUS STEP
+ Replace URL WITH PREVIOUS STEP
 
 curl -s -H 'Content-Type: application/json' -H 'Authorization: Bearer '$(gcloud auth print-access-token)'' 'https://videointelligence.googleapis.com/v1/videos:annotate' -d @request.json
 
