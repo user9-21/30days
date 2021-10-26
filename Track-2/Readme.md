@@ -1,18 +1,16 @@
 Track 2
 
 
-# 1.2 >>
+# 1.2 
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/1.2-Creating_a_Virtual_Machine
-
 chmod +x 1.sh
-
 ./1.sh
 
 
-# 1.3 >>
+# 1.3 
 gcloud compute instances create gcelab2 --machine-type n1-standard-2 --zone us-central1-a 
 
-# 1.4 >>
+# 1.4 
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/1.4-Kubernetes_Engine_Qwik_Start
 
 chmod +x 1.sh
