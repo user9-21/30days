@@ -1,0 +1,14 @@
+export BUCKET_NAME=$(gcloud info --format='value(config.project)')
+gsutil mb gs://$BUCKET_NAME/
+wget https://raw.githubusercontent.com/user9-21/30days/main/Track-2/files/start_station_data.csv
+wget https://raw.githubusercontent.com/user9-21/30days/main/Track-2/files/end_station_data.csv
+gsutil cp start_station_data.csv gs://$BUCKET_NAME
+gsutil cp end_station_data.csv gs://$BUCKET_NAME
+
+gcloud sql instances create qwiklabs-demo --database-version=MYSQL_5_7 --region=us-central1 --root-password=password
+
+# type password when asked 
+
+gcloud sql connect  qwiklabs-demo --user=root
+CREATE DATABASE bike;
+exit
