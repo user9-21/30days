@@ -95,6 +95,11 @@ chmod +x 1.sh
 ./1.sh
 
 ```
+### in mysql
+```
+CREATE DATABASE bike;
+exit
+```
 ## 3.2
 ```
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/3.2-BigQuery__Qwik_Start-Command_Line
