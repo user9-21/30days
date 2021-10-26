@@ -10,14 +10,15 @@ gcloud notebooks instances list --location=us-central1-a
 gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT  --wait 120 --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
 
 cat > laststep.sh <<EOF
+pip3 install xgboost==0.82 --user
+pip3 install scikit-learn==0.20.4 --user
+git clone https://github.com/GoogleCloudPlatform/training-data-analyst
 cd training-data-analyst/quests/dei/census
 PROJECT=$(gcloud config get-value core/project)
 echo $PROJECT
 BUCKET=$(gsutil ls)
 echo $BUCKET
-pip3 install xgboost==0.82 --user
-pip3 install scikit-learn==0.20.4 --user
-git clone https://github.com/GoogleCloudPlatform/training-data-analyst
+
 
 EOF
 ls
