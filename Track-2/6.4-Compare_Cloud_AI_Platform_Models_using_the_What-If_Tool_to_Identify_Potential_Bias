@@ -1,0 +1,23 @@
+gcloud services enable notebooks.googleapis.com
+gcloud compute images describe-from-family tf2-ent-2-3-cpu --project deeplearning-platform-release
+
+gcloud notebooks instances create instance-without-gpu \
+  --vm-image-project=deeplearning-platform-release \
+  --vm-image-family=tf2-ent-2-3-cpu \
+  --machine-type=n1-standard-4 \
+  --location=us-central1-a
+gcloud notebooks instances list --location=us-central1-a
+gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT  --wait 120 --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
+
+cat > laststep.sh <<EOF
+cd training-data-analyst/quests/dei/census
+PROJECT=$(gcloud config get-value core/project)
+echo $PROJECT
+BUCKET=$(gsutil ls)
+echo $BUCKET
+pip3 install xgboost==0.82 --user
+pip3 install scikit-learn==0.20.4 --user
+git clone https://github.com/GoogleCloudPlatform/training-data-analyst
+
+EOF
+ls
