@@ -49,7 +49,7 @@ chmod +x 1.sh
 
 
 2.5 >>
-gcloud compute ssh linux-instance --zone=us-central1-a -y
+gcloud compute ssh linux-instance --zone=us-central1-a 
 
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/2.5-Cloud_Natural_Language_API__Qwik_Start
 chmod +x 1.sh
@@ -59,14 +59,21 @@ chmod +x 1.sh
 gcloud compute ssh linux-instance --zone us-central1-a
 
 in ssh
+
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/2.6-Google_Cloud_Speech_API_Qwik_Start
+
 chmod +x 1.sh
+
 ./1.sh
+
 
 2.7 >>
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/2.7-Video_Intelligence__Qwik_Start
+
 chmod +x 1.sh
+
 ./1.sh
+
 
  Replace URL WITH PREVIOUS STEP
 
