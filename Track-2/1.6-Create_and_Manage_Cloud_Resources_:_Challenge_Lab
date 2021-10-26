@@ -63,4 +63,6 @@ gcloud compute forwarding-rules describe http-content-rule  --global
 gcloud compute forwarding-rules describe http-content-rule --global --format='get(IPAddress)'
 export IP_ADDRESS=$(gcloud compute forwarding-rules describe http-content-rule --global --format='value(IPAddress)')
 echo $IP_ADDRESS
+echo Navigate Below and verify loadbalancer is created
+echo https://console.cloud.google.com/net-services/loadbalancing/loadBalancers/list
 while true; do curl -m1 $IP_ADDRESS; done
