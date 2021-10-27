@@ -9,6 +9,11 @@ gcloud notebooks instances create instance-without-gpu \
   --location=us-central1-a
 gcloud notebooks instances list --location=us-central1-a
 cat > laststep.sh <<EOF
+
+#if error in ssh, retry this
+
+gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT  --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
+
 # Run this command in jupyterlab
 
 pip3 install xgboost --user
@@ -24,4 +29,4 @@ echo $BUCKET
 
 EOF
 cat laststep.sh
-gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT   --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
+gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT  --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
