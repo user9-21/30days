@@ -29,9 +29,12 @@ ls
 cat laststep.sh
 
 STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)')
+while [ $STATE = PROVISIONING ]; 
+do echo "WAIT" && sleep 120 && STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)') ; 
+done
+
 while [ $STATE = ACTIVE ]; 
 do sleep 2 && gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080 ; 
 done
 
-gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
 
