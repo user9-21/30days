@@ -18,12 +18,13 @@ gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a
 # in jupyterlab
 
 git clone https://github.com/GoogleCloudPlatform/training-data-analyst
-cd training-data-analyst/quests/dei
 PROJECT=$(gcloud config get-value core/project)
+cd training-data-analyst/quests/dei
 wget https://raw.githubusercontent.com/user9-21/30days/main/files/challenge-lab.ipynb
-echo $PROJECT
+sed -i 's/#TODO/Your_Project_here/g' challenge-lab.ipynb
 
-# Copy PROJECT_ID and paste in the what-if-tool-challenge.ipynb file
+# Copy PROJECT_ID and paste in the challenge-lab.ipynb file
+# and run all the command
 EOF
 ls
 cat laststep.sh
@@ -37,6 +38,6 @@ done
 echo $STATE
 sleep 2
 while [ $STATE = ACTIVE ]; 
-do sleep 2 && gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080 ; 
+do echo "preview on port 80 to open jupyterlab" && gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080 ; 
 done
 
