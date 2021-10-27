@@ -1,6 +1,6 @@
 # Track 1
 
-## 2.1 Cloud Storage: Qwik Start - CLI/SDK
+## 2.1 [Cloud Storage: Qwik Start - CLI/SDK] (https://www.cloudskillsboost.google/focuses/569?parent=catalog)
 ```
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/2.1-Cloud_Storage__Qwik_Start-CLI_SDK
 chmod +x 1.sh
