@@ -6,11 +6,7 @@ gcloud notebooks instances create instance-without-gpu \
   --vm-image-family=tf2-ent-2-3-cpu \
   --machine-type=n1-standard-4 \
   --location=us-central1-a
-gcloud notebooks instances list --location=us-central1-a --format=value.(STATE)
-STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)')
-while [ $STATE = ACTIVE ]; 
-do sleep 2 && gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080 ; 
-done
+gcloud notebooks instances list --location=us-central1-a
 
 cat > laststep.sh <<EOF
 
@@ -31,5 +27,11 @@ cd training-data-analyst/quests/dei/census
 EOF
 ls
 cat laststep.sh
+
+STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)')
+while [ $STATE = ACTIVE ]; 
+do sleep 2 && gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080 ; 
+done
+
 gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
 
