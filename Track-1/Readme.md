@@ -24,6 +24,13 @@ chmod +x 1.sh
 
 
 ```
+### in lamp-vm ssh
+```
+chmod +x laststep.sh
+./laststep.sh
+
+
+```
 ## 2.2
 ```
 wget --output-document 1.sh 
