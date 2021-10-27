@@ -20,7 +20,12 @@ sudo bash add-logging-agent-repo.sh
 sudo apt update
 sudo apt install google-fluentd
 
+# Now create Uptime check and alerting policy
+# https://console.cloud.google.com/monitoring/uptime
+# https://console.cloud.google.com/monitoring/alerting
+# Edit vm amd enable http traffic
+cat laststep.sh
 EOF
 cat laststep.sh
-
+gcloud compute scp laststep.sh lamp-1-vm:~
 gcloud compute ssh lamp-1-vm
