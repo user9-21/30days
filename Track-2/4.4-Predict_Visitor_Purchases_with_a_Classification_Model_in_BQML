@@ -281,11 +281,13 @@ SELECT
 ORDER BY
   predicted_will_buy_on_return_visit DESC;'
   
-cat > laststep.txt <<EOF
+cat > laststep.sh <<EOF
 
 # If score is not 100, perform below query in bigquery console
+# https://console.cloud.google.com/bigquery
 
-QUERY = '#standardSQL
+QUERY = 
+#standardSQL
 SELECT
   roc_auc,
   CASE
@@ -341,7 +343,7 @@ SELECT * EXCEPT(unique_session_id) FROM (
   device.deviceCategory,
   country
 )
-));'
+));
 
 /***********************************Query ends**********************************************/
 # If score is not 100, perform above query in bigquery console 
@@ -349,7 +351,7 @@ SELECT * EXCEPT(unique_session_id) FROM (
 
 
 EOF
-sed -i 's/"data-to-insights.ecommerce.web_analytics"/`data-to-insights.ecommerce.web_analytics`/g' laststep.txt
-cat laststep.txt
+sed -i 's/"data-to-insights.ecommerce.web_analytics"/`data-to-insights.ecommerce.web_analytics`/g' laststep.sh
+cat laststep.sh
 
   
