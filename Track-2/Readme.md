@@ -219,7 +219,7 @@ chmod +x 1.sh
 ```
 ## 6.2
 ```
-gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT   --zone us-central1-a  qwiklabs-tensorflow-notebook -- -L 8080:localhost:8080
+gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a  qwiklabs-tensorflow-notebook -- -L 8080:localhost:8080
 ```
 ```
 git clone https://github.com/GoogleCloudPlatform/training-data-analyst
