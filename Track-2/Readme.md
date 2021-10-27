@@ -238,3 +238,11 @@ chmod +x 1.sh
 ./1.sh
 
 ```
+## 6.5 
+```
+wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-2/6.5-Explore_Machine_Learning_Models_with_Explainable_AI__Challenge_Lab
+chmod +x 1.sh
+./1.sh
+
+```
+
