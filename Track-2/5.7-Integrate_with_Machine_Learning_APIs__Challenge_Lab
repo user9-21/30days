@@ -218,12 +218,19 @@ assert errors == []
 
 
 EOF
-
+python3 analyze-images.py $DEVSHELL_PROJECT_ID $DEVSHELL_PROJECT_ID
 export GOOGLE_APPLICATION_CREDENTIALS=${PWD}/sa-key.json
 echo $GOOGLE_APPLICATION_CREDENTIALS
-
-python3 analyze-images.py $DEVSHELL_PROJECT_ID $DEVSHELL_PROJECT_ID
-
-
-
 bq query --use_legacy_sql=false \ 'SELECT locale,COUNT(locale) as lcount FROM image_classification_dataset.image_text_detail GROUP BY locale ORDER BY lcount DESC'
+
+cat > laststep.sh <<EOF
+
+# if error, run this code
+
+export GOOGLE_APPLICATION_CREDENTIALS=${PWD}/sa-key.json
+python3 analyze-images.py $DEVSHELL_PROJECT_ID $DEVSHELL_PROJECT_ID
+bq query --use_legacy_sql=false \ 'SELECT locale,COUNT(locale) as lcount FROM image_classification_dataset.image_text_detail GROUP BY locale ORDER BY lcount DESC'
+
+EOF
+cat laststep.sh
+echo $GOOGLE_APPLICATION_CREDENTIALS
