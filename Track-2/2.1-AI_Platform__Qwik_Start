@@ -9,8 +9,11 @@ gcloud notebooks instances create instance-without-gpu \
   
 cat > laststep.sh <<EOF
 
-# Run in jupyterlab terminal
+#if error in ssh, retry this
 
+gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
+
+# Run in jupyterlab terminal
 
 git clone https://github.com/GoogleCloudPlatform/training-data-analyst
 cd training-data-analyst/self-paced-labs/ai-platform-qwikstart
@@ -19,4 +22,4 @@ PROJECT=$(gcloud config get-value project)
 EOF
 cat laststep.sh
 
-gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT   --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
+gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
