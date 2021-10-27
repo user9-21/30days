@@ -10,8 +10,6 @@ gcloud compute firewall-rules create privatenet-allow-icmp-ssh-rdp --direction=I
 gcloud compute instances create managementnet-us-vm --zone=us-central1-f --machine-type=f1-micro --subnet=managementsubnet-us
 gcloud compute instances create privatenet-us-vm --zone=us-central1-f --machine-type=n1-standard-1 --subnet=privatesubnet-us
 
-gcloud compute instances create vm-appliance --zone=us-central1-f --machine-type=n1-standard-4 --subnet=privatesubnet-us --subnet=managementsubnet-us --subnet=mynetwork
-
 echo "creating vm-appliance"
 
 gcloud compute instances create vm-appliance --zone=us-central1-f --machine-type=n1-standard-4 --network-interface=network-tier=PREMIUM,subnet=managementsubnet-us --network-interface=network-tier=PREMIUM,subnet=privatesubnet-us --network-interface=network-tier=PREMIUM,subnet=mynetwork --maintenance-policy=MIGRATE --create-disk=auto-delete=yes,boot=yes,device-name=vm-appliance,image=projects/debian-cloud/global/images/debian-10-buster-v20210916,mode=rw,size=10,type=projects/$PROJECT/zones/us-central1-f/diskTypes/pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
