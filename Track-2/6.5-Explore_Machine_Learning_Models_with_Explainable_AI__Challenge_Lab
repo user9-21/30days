@@ -1,3 +1,4 @@
+gsutil mb gs://$GOOGLE_CLOUD_PROJECT
 gcloud services enable notebooks.googleapis.com
 gcloud compute images describe-from-family tf2-ent-2-3-cpu --project deeplearning-platform-release
 
