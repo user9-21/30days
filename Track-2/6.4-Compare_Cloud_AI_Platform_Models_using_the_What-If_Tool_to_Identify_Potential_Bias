@@ -6,9 +6,19 @@ gcloud notebooks instances create instance-without-gpu \
   --vm-image-family=tf2-ent-2-3-cpu \
   --machine-type=n1-standard-4 \
   --location=us-central1-a
-gcloud notebooks instances list --location=us-central1-a
+gcloud notebooks instances list --location=us-central1-a --format=value.(STATE)
+STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)')
+while [ $STATE = ACTIVE ]; 
+do sleep 2 && gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080 ; 
+done
+
 cat > laststep.sh <<EOF
 
+# retry this if error in ssh
+
+gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
+
+# in jupyterlab 
 
 pip3 install xgboost==0.82 --user
 pip3 install scikit-learn==0.20.4 --user
@@ -21,5 +31,5 @@ cd training-data-analyst/quests/dei/census
 EOF
 ls
 cat laststep.sh
-gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080 --quiet
+gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
 
