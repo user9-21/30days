@@ -69,7 +69,7 @@ halyard:
           --message-format GCR
 EOF
 tput bold; tput setaf 3 ;echo iNSTALLING hELM; tput sgr0;
-tput bold; tput setaf 3 ;echo it can take upto 20 minutes. If taking more than 20 mins cancel by pressing CTRL + C and install another helm chart (you can try below mentioned code)  ; tput sgr0;
+tput bold; tput setaf 3 ;echo it can take upto 20 minutes. If taking more than 20 mins cancel by pressing CTRL + C and install another helm chart you can try below mentioned code  ; tput sgr0;
 while sleep 1;do tput sc;tput cup 0 $(($(tput cols)-11));echo -e "\e[1;97m`date +%r`\e[39m";tput rc;done &
 helm install -n default cd stable/spinnaker -f spinnaker-config.yaml --version 2.0.0-rc9 --timeout 20m0s --wait
 export DECK_POD=$(kubectl get pods --namespace default -l "cluster=spin-deck"  -o jsonpath="{.items[0].metadata.name}")
