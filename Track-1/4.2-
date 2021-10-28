@@ -81,6 +81,7 @@ git config credential.helper gcloud.sh
 export PROJECT=$(gcloud info --format='value(config.project)')
 git remote add origin https://source.developers.google.com/p/$PROJECT/r/sample-app
 git push origin master
+gcloud services enable cloudbuild.googleapis.com
 sleep 10
 gcloud beta builds triggers create cloud-source-repositories --repo=sample-app --tag-pattern=v1.* --build-config=cloudbuild.yaml
 export PROJECT=$(gcloud info --format='value(config.project)')
