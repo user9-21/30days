@@ -90,7 +90,7 @@ chmod +x 1.sh
 
 ```
 
-## 4.2[Continuous Delivery Pipelines with Spinnaker and Kubernetes Engine](https://www.cloudskillsboost.google/focuses/552?parent=catalog)
+## 4.2 [Continuous Delivery Pipelines with Spinnaker and Kubernetes Engine](https://www.cloudskillsboost.google/focuses/552?parent=catalog)
 ```
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/4.2-Continuous_Delivery_Pipelines_with_Spinnaker_and_Kubernetes_Engine
 chmod +x 1.sh
@@ -99,9 +99,9 @@ chmod +x 1.sh
 
 ```
 
-## 
+## 4.5 [Deploy and Manage Cloud Environments with Google Cloud: Challenge Lab](https://www.cloudskillsboost.google/focuses/10417?parent=catalog)
 ```
-wget --output-document 1.sh 
+wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/4.5-Deploy_and_Manage_Cloud_Environments_with_Google_Cloud-Challenge_Lab
 chmod +x 1.sh
 ./1.sh
 
