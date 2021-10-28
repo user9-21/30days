@@ -5,6 +5,15 @@ export SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:spinnak
 export PROJECT=$(gcloud info --format='value(config.project)')
 gcloud projects add-iam-policy-binding $PROJECT --role='roles/storage.admin' --member serviceAccount:$SA_EMAIL
 gcloud iam service-accounts keys create spinnaker-sa.json --iam-account $SA_EMAIL
+sleep 5
+tput bold; tput setaf 3 ;echo if error in iam role, open another terminal by clicking '+' and run below commnad; tput sgr0;
+tput bold; tput setab 2 ;echo "
+export SA_EMAIL=$(gcloud iam service-accounts list --filter='displayName:spinnaker-account'  --format='value(email)')
+export PROJECT=$(gcloud info --format='value(config.project)')
+gcloud projects add-iam-policy-binding $PROJECT --role='roles/storage.admin' --member serviceAccount:$SA_EMAIL
+gcloud iam service-accounts keys create spinnaker-sa.json --iam-account $SA_EMAIL
+"; tput sgr0;
+sleep 60
 gcloud pubsub topics create projects/$PROJECT/topics/gcr
 gcloud pubsub subscriptions create gcr-triggers --topic projects/${PROJECT}/topics/gcr
 export SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:spinnaker-account" --format='value(email)')
