@@ -19,16 +19,26 @@ gcloud container clusters get-credentials kraken-prod
 cd /work/k8s
 
 for F in $(ls *.yaml); do kubectl create -f $F; done
-sleep 30
-kubectl get deployments
-kubectl get pods
-sleep 30
-kubectl get services
-sleep 10
+
+
 gcloud config set compute/zone us-east1-b
 gcloud compute instances create kraken-admin --network-interface="subnet=kraken-mgmt-subnet" --network-interface="subnet=kraken-prod-subnet"
-exit
 
+sleep 10
+kubectl get services
+tput bold; tput setaf 3 ;echo if frontend and other deployment does not appear try this code; tput sgr0;
+tput bold; tput setab 2 ;echo '
+for F in $(ls *.yaml); do kubectl create -f $F; done
+kubectl get services
+'; tput sgr0;
+sleep 10
+kubectl get deployments
+kubectl get pods
+kubectl get services
+tput bold; tput setaf 3 ;echo After runnig the code wait for external ip in atleat one deployment. Check through this command; tput sgr0;
+tput bold; tput setab 3 ;echo 'kubectl get services' ; tput sgr0;
+
+tput bold; tput setaf 3 ;echo enter exit to quit ssh; tput sgr0;
 
 EOF
 
@@ -39,13 +49,7 @@ gcloud compute scp ssh.sh kraken-jumphost:~
 
 tput bold; tput setaf 3 ;echo in kraken jumohost ssh run this; tput sgr0;
 tput bold; tput setab 2 ;echo '
-chmod +x ssh.sh
-./ssh.sh
-
-'; tput sgr0;
-tput bold; tput setaf 3 ;echo if file permission not granred run this; tput sgr0;
-tput bold; tput setab 2 ;echo '
-chmod +x ssh.sh
+ls
 ./ssh.sh
 
 '; tput sgr0;
