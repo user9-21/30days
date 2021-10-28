@@ -55,27 +55,27 @@ chmod +x 1.sh
 
 ```
 
-## 
+## 3.3 [Multiple VPC Networks](https://www.cloudskillsboost.google/focuses/1230?parent=catalog)
 ```
-wget --output-document 1.sh 
+wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/3.3-Multiple_VPC_Networks
 chmod +x 1.sh
 ./1.sh
 
 
 ```
 
-## 
+## 3.4 [Managing Deployments Using Kubernetes Engine](https://www.cloudskillsboost.google/focuses/639?parent=catalog)
 ```
-wget --output-document 1.sh 
+wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/3.4-Managing_Deployments_Using_Kubernetes_Engine
 chmod +x 1.sh
 ./1.sh
 
 
 ```
 
-## 
+## 3.5 [Set Up and Configure a Cloud Environment in Google Cloud: Challenge Lab](https://www.cloudskillsboost.google/focuses/10603?parent=catalog)
 ```
-wget --output-document 1.sh 
+wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/3.5-Set_Up_and_Configure_a_Cloud_Environment_in_Google_Cloud-Challenge_Lab
 chmod +x 1.sh
 ./1.sh
 
