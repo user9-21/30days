@@ -59,10 +59,19 @@ halyard:
           --project $PROJECT \
           --message-format GCR
 EOF
-
-helm install -n default cd stable/spinnaker -f spinnaker-config.yaml --version 2.0.0-rc9 --timeout 10m0s --wait
+tput bold; tput setaf 3 ;echo iNSTALLING hELM; tput sgr0;
+tput bold; tput setaf 3 ;echo it can take upto 20 minutes. If taking more than 20 mins cancel by pressing CTRL + C and install another helm chart (you can try below mentioned code)  ; tput sgr0;
+while sleep 1;do tput sc;tput cup 0 $(($(tput cols)-11));echo -e "\e[1;97m`date +%r`\e[39m";tput rc;done &
+helm install -n default cd stable/spinnaker -f spinnaker-config.yaml --version 2.0.0-rc9 --timeout 20m0s --wait
 export DECK_POD=$(kubectl get pods --namespace default -l "cluster=spin-deck"  -o jsonpath="{.items[0].metadata.name}")
 kubectl port-forward --namespace default $DECK_POD 8080:9000 >> /dev/null &
+tput bold; tput setaf 3 ;echo Helm installed > If yes procced else run this; tput sgr0;
+sleep 20
+tput bold; tput setab 2 ;echo '
+helm install -n default cdd stable/spinnaker -f spinnaker-config.yaml --version 2.0.0-rc9 --timeout 20m0s --wait
+export DECK_POD=$(kubectl get pods --namespace default -l "cluster=spin-deck"  -o jsonpath="{.items[0].metadata.name}")
+kubectl port-forward --namespace default $DECK_POD 8080:9000 >> /dev/null &
+'; tput sgr0;
 
 tput bold; tput setaf 3 ;echo WEB PREVIEW ON PORT 80; tput sgr0;
 #Preview on Port 80
@@ -92,10 +101,10 @@ git commit -a -m "Set project ID"
 git tag v1.0.0
 git push --tags
 
-tput bold; tput setaf 3 ;echo Origin master pushed
-echo TRIGGER BUILD 
-echo NOW RUN TRIGGER MANUALLY THROUGH CONSOLE
-echo https://console.cloud.google.com/cloud-build/triggers; tput sgr0;
+tput bold; tput setaf 3 ;echo Origin master pushed; tput sgr0;
+tput bold; tput setaf 3 ;echo TRIGGER BUILD ; tput sgr0;
+tput bold; tput setaf 3 ;echo NOW RUN TRIGGER MANUALLY THROUGH CONSOLE; tput sgr0;
+tput bold; tput setaf 3 ;echo https://console.cloud.google.com/cloud-build/triggers; tput sgr0;
 tput bold; tput setaf 3 ;echo After trigger run succedded, run below command; tput sgr0;
 
 cat > 2.sh <<EOF
@@ -130,9 +139,8 @@ sed -i 's/orange/blue/g' cmd/gke-info/common-service.go
 git commit -a -m "Change color to blue"
 git tag v1.0.1
 git push --tags
-git revert v1.0.1
-git tag v1.0.2
-git push --tags
+tput bold; tput setaf 3 ;echo Now go to cloud build history and wait for build to succeed; tput sgr0;
+tput bold; tput setaf 3 ;echo https://console.cloud.google.com/cloud-build/triggers; tput sgr0;
 EOF
 
 tput bold; tput setab 1 ;echo '
