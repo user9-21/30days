@@ -13,7 +13,8 @@ export PROJECT=$(gcloud info --format='value(config.project)')
 gcloud projects add-iam-policy-binding $PROJECT --role='roles/storage.admin' --member serviceAccount:$SA_EMAIL
 gcloud iam service-accounts keys create spinnaker-sa.json --iam-account $SA_EMAIL
 "; tput sgr0;
-sleep 60
+
+sleep 20
 gcloud pubsub topics create projects/$PROJECT/topics/gcr
 gcloud pubsub subscriptions create gcr-triggers --topic projects/${PROJECT}/topics/gcr
 export SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:spinnaker-account" --format='value(email)')
@@ -68,23 +69,25 @@ halyard:
           --project $PROJECT \
           --message-format GCR
 EOF
+
 tput bold; tput setaf 3 ;echo iNSTALLING hELM; tput sgr0;
 tput bold; tput setaf 3 ;echo it can take upto 20 minutes. If taking more than 20 mins cancel by pressing CTRL + C and install another helm chart you can try below mentioned code  ; tput sgr0;
 while sleep 1;do tput sc;tput cup 0 $(($(tput cols)-11));echo -e "\e[1;97m`date +%r`\e[39m";tput rc;done &
 helm install -n default cd stable/spinnaker -f spinnaker-config.yaml --version 2.0.0-rc9 --timeout 20m0s --wait
 export DECK_POD=$(kubectl get pods --namespace default -l "cluster=spin-deck"  -o jsonpath="{.items[0].metadata.name}")
 kubectl port-forward --namespace default $DECK_POD 8080:9000 >> /dev/null &
-tput bold; tput setaf 3 ;echo Helm installed > If yes procced else run this; tput sgr0;
+tput bold; tput setaf 3 ;echo WEB PREVIEW ON PORT 80; tput sgr0;
+#Preview on Port 80
 sleep 20
+tput bold; tput setaf 3 ;echo Helm installed > If yes procced else run this; tput sgr0;
 tput bold; tput setab 2 ;echo '
 helm install -n default cdd stable/spinnaker -f spinnaker-config.yaml --version 2.0.0-rc9 --timeout 20m0s --wait
 export DECK_POD=$(kubectl get pods --namespace default -l "cluster=spin-deck"  -o jsonpath="{.items[0].metadata.name}")
 kubectl port-forward --namespace default $DECK_POD 8080:9000 >> /dev/null &
 '; tput sgr0;
 
-tput bold; tput setaf 3 ;echo WEB PREVIEW ON PORT 80; tput sgr0;
-#Preview on Port 80
 sleep 20
+
 gsutil -m cp -r gs://spls/gsp114/sample-app.tar .
 mkdir sample-app
 tar xvf sample-app.tar -C ./sample-app
@@ -136,7 +139,6 @@ tput bold; tput setaf 3 ;echo Start MANUALLY Execution in spinnaker ; tput sgr0;
 tput bold; tput setaf 3 ;echo After Spinnaker succeeded, run below command; tput sgr0;
 sleep 10
 tput bold; tput setab 1 ;echo '
-chmod +x laststep.sh
 ./laststep.sh
 
 '; tput sgr0;
@@ -152,8 +154,10 @@ tput bold; tput setaf 3 ;echo Now go to cloud build history and wait for build t
 tput bold; tput setaf 3 ;echo https://console.cloud.google.com/cloud-build/triggers; tput sgr0;
 EOF
 
-tput bold; tput setab 1 ;echo '
 chmod +x 2.sh
+chmod +x laststep.sh
+
+tput bold; tput setab 1 ;echo '
 ./2.sh
 
 '; tput sgr0;
