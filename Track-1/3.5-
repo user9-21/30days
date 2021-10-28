@@ -1,0 +1,46 @@
+echo TASK 1
+gcloud compute networks create griffin-dev-vpc --subnet-mode custom
+gcloud compute networks subnets create griffin-dev-wp --network=griffin-dev-vpc --region us-east1 --range=192.168.16.0/20
+gcloud compute networks subnets create griffin-dev-mgmt --network=griffin-dev-vpc --region us-east1 --range=192.168.32.0/20
+echo TASK 2 
+gsutil cp -r gs://cloud-training/gsp321/dm .
+cd dm
+sed -i s/SET_REGION/us-east1/g prod-network.yaml
+gcloud deployment-manager deployments create prod-network     --config=prod-network.yaml
+cd ..
+echo TASK 3
+gcloud compute instances create bastion --network-interface=network=griffin-dev-vpc,subnet=griffin-dev-mgmt  --network-interface=network=griffin-prod-vpc,subnet=griffin-prod-mgmt --tags=ssh --zone=us-east1-b
+gcloud compute firewall-rules create fw-ssh-dev --source-ranges=0.0.0.0/0 --target-tags ssh --allow=tcp:22 --network=griffin-dev-vpc
+gcloud compute firewall-rules create fw-ssh-prod --source-ranges=0.0.0.0/0 --target-tags ssh --allow=tcp:22 --network=griffin-prod-vpc
+echo TASK 4
+echo Here you need to be cautious
+
+gcloud sql instances create griffin-dev-db --root-password password --region=us-east1
+gcloud sql connect griffin-dev-db
+
+echo TASK 5
+gcloud container clusters create griffin-dev   --network griffin-dev-vpc   --subnetwork griffin-dev-wp   --machine-type n1-standard-4   --num-nodes 2    --zone us-east1-b
+gcloud container clusters get-credentials griffin-dev --zone us-east1-b
+cd ~/
+gsutil cp -r gs://cloud-training/gsp321/wp-k8s .
+echo TASK 6
+sed -i s/username_goes_here/wp_user/g wp-k8s/wp-env.yaml
+sed -i s/password_goes_here/stormwind_rules/g wp-k8s/wp-env.yaml
+cd wp-k8s
+kubectl create -f wp-env.yaml
+gcloud iam service-accounts keys create key.json     --iam-account=cloud-sql-proxy@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com
+kubectl create secret generic cloudsql-instance-credentials     --from-file key.json
+echo TASK 7
+sed -i s/YOUR_SQL_INSTANCE/griffin-dev-db/g wp-deployment.yaml
+kubectl create -f wp-deployment.yaml
+kubectl create -f wp-service.yaml
+echo TASK 8
+echo Do task 8 Manually
+echo https://console.cloud.google.com/monitoring/uptime
+echo create uptime check manually
+
+echo TASK 9
+export PROJECT_ID=$(gcloud info --format='value(config.project)')
+export LASTUSER=$(sed -E 's/MEMBERS: //gm;t;d' <<< $(gcloud projects get-iam-policy $PROJECT_ID --flatten="bindings[].members" --format='table(bindings.members)' --filter="bindings.members:user:student*" |& tail -1))
+echo $LASTUSER 
+gcloud projects add-iam-policy-binding $PROJECT_ID --role='roles/editor' --member $LASTUSER
