@@ -1,0 +1,94 @@
+cat > ssh.sh <<EOF
+
+tput bold; tput setaf 3 ;echo Currently in SSh; tput sgr0;
+cd /work/dm
+sed -i s/SET_REGION/us-east1/g prod-network.yaml
+
+gcloud deployment-manager deployments create prod-network --config=prod-network.yaml
+
+gcloud config set compute/zone us-east1-b
+
+gcloud container clusters create kraken-prod \
+          --num-nodes 2 \
+          --network kraken-prod-vpc \
+          --subnetwork kraken-prod-subnet\
+          --zone us-east1-b
+
+gcloud container clusters get-credentials kraken-prod
+
+cd /work/k8s
+
+for F in $(ls *.yaml); do kubectl create -f $F; done
+gcloud config set compute/zone us-east1-b
+gcloud compute instances create kraken-admin --network-interface="subnet=kraken-mgmt-subnet" --network-interface="subnet=kraken-prod-subnet"
+exit
+EOF
+ls
+chmod +x ssh.sh
+gcloud compute scp ssh.sh kraken-jumphost:~
+tput bold; tput setaf 3 ;echo in kraken jumohost ssh run this; tput sgr0;
+tput bold; tput setab 2 ;echo '
+chmod +x ssh.sh
+./ssh.sh
+
+'; tput sgr0;
+gcloud compute ssh kraken-jumphost --zone=us-east1-b
+
+tput bold; tput setaf 3 ;echo Back in cloudshell; tput sgr0;
+
+cat > Alerting_policy.yaml <<EOF
+
+Open monitoring
+Create an alert
+Configure the policy to email your email and set
+
+   Resource Type : VM Instance
+   Metric : CPU utilization
+   Filter : instance_name
+            Value : kraken-admin
+   Condition : is above
+   Threshold : 50%
+   For : 1 minute
+
+EOF
+ls
+
+gcloud config set compute/zone us-east1-b
+
+gcloud container clusters get-credentials spinnaker-tutorial
+
+DECK_POD=$(kubectl get pods --namespace default -l "cluster=spin-deck" -o jsonpath="{.items[0].metadata.name}")
+
+kubectl port-forward --namespace default $DECK_POD 8080:9000 >> /dev/null &
+
+cat > laststep.sh << EOF
+
+gcloud config set compute/zone us-east1-b
+
+gcloud source repos clone sample-app
+
+cd sample-app
+touch a
+
+git config --global user.email "$(gcloud config get-value account)"
+git config --global user.name "Student"
+git commit -a -m "change"
+git tag v1.0.1
+git push --tags
+
+tput bold; tput setaf 3 ;echo Go to console and create alerting policy: click this link ; tput sgr0;
+tput bold; tput setaf 3 ;echo https://console.cloud.google.com/monitoring/alerting/policies/create; tput sgr0;
+cat Alerting_policy.yaml
+EOF
+tput bold; tput setaf 3 ;echo laststep.sh created; tput sgr0;
+ls
+chmod +x laststep.sh
+tput bold; tput setaf 3 ;echo file permission granted; tput sgr0;
+tput bold; tput setaf 3 ;echo Now, Web Preview on port 80 to open spinnaker; tput sgr0;
+tput bold; tput setaf 3 ;echo Start MANUALLY Execution in spinnaker ; tput sgr0;
+tput bold; tput setaf 3 ;echo After Spinnaker succeeded, run below command; tput sgr0;
+tput bold; tput setab 1 ;echo '
+./laststep.sh
+
+'; tput sgr0;
+
