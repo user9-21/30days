@@ -81,18 +81,18 @@ chmod +x 1.sh
 
 
 ```
-## 
+## 4.1 [Orchestrating the Cloud with Kubernetes](https://www.cloudskillsboost.google/focuses/557?parent=catalog)
 ```
-wget --output-document 1.sh 
+wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/4.1-Orchestrating_the_Cloud_with_Kubernetes
 chmod +x 1.sh
 ./1.sh
 
 
 ```
 
-## 
+## 4.2[Continuous Delivery Pipelines with Spinnaker and Kubernetes Engine](https://www.cloudskillsboost.google/focuses/552?parent=catalog)
 ```
-wget --output-document 1.sh 
+wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/4.2-Continuous_Delivery_Pipelines_with_Spinnaker_and_Kubernetes_Engine
 chmod +x 1.sh
 ./1.sh
 
