@@ -19,20 +19,39 @@ gcloud container clusters get-credentials kraken-prod
 cd /work/k8s
 
 for F in $(ls *.yaml); do kubectl create -f $F; done
+sleep 30
+kubectl get deployments
+kubectl get pods
+sleep 30
+kubectl get services
+sleep 10
 gcloud config set compute/zone us-east1-b
 gcloud compute instances create kraken-admin --network-interface="subnet=kraken-mgmt-subnet" --network-interface="subnet=kraken-prod-subnet"
 exit
+
+
 EOF
+
 ls
 chmod +x ssh.sh
+
 gcloud compute scp ssh.sh kraken-jumphost:~
+
 tput bold; tput setaf 3 ;echo in kraken jumohost ssh run this; tput sgr0;
 tput bold; tput setab 2 ;echo '
 chmod +x ssh.sh
 ./ssh.sh
 
 '; tput sgr0;
-gcloud compute ssh kraken-jumphost --zone=us-east1-b
+tput bold; tput setaf 3 ;echo if file permission not granred run this; tput sgr0;
+tput bold; tput setab 2 ;echo '
+chmod +x ssh.sh
+./ssh.sh
+
+'; tput sgr0;
+
+
+gcloud compute ssh kraken-jumphost --zone us-east1-b --quiet
 
 tput bold; tput setaf 3 ;echo Back in cloudshell; tput sgr0;
 
@@ -51,24 +70,23 @@ Configure the policy to email your email and set
    For : 1 minute
 
 EOF
+
 ls
 
 gcloud config set compute/zone us-east1-b
-
 gcloud container clusters get-credentials spinnaker-tutorial
-
 DECK_POD=$(kubectl get pods --namespace default -l "cluster=spin-deck" -o jsonpath="{.items[0].metadata.name}")
-
 kubectl port-forward --namespace default $DECK_POD 8080:9000 >> /dev/null &
 
 cat > laststep.sh << EOF
 
+
 gcloud config set compute/zone us-east1-b
-
 gcloud source repos clone sample-app
-
 cd sample-app
 touch a
+touch b
+sleep 60
 
 git config --global user.email "$(gcloud config get-value account)"
 git config --global user.name "Student"
@@ -78,9 +96,12 @@ git push --tags
 
 tput bold; tput setaf 3 ;echo Go to console and create alerting policy: click this link ; tput sgr0;
 tput bold; tput setaf 3 ;echo https://console.cloud.google.com/monitoring/alerting/policies/create; tput sgr0;
+cd ..
 cat Alerting_policy.yaml
+
 EOF
 tput bold; tput setaf 3 ;echo laststep.sh created; tput sgr0;
+
 ls
 chmod +x laststep.sh
 tput bold; tput setaf 3 ;echo file permission granted; tput sgr0;
