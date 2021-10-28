@@ -16,6 +16,16 @@ echo TASK 4
 echo Here you need to be cautious
 
 gcloud sql instances create griffin-dev-db --root-password password --region=us-east1
+echo Instance created
+echo enter password as password
+echo Run below mentioned query in mysql
+echo "
+CREATE DATABASE wordpress;
+GRANT ALL PRIVILEGES ON wordpress.* TO "wp_user"@"%" IDENTIFIED BY "stormwind_rules";
+FLUSH PRIVILEGES;
+
+exit
+"
 gcloud sql connect griffin-dev-db
 
 echo TASK 5
@@ -41,6 +51,22 @@ echo create uptime check manually
 
 echo TASK 9
 export PROJECT_ID=$(gcloud info --format='value(config.project)')
+export FIRSTUSER=$(sed -E 's/MEMBERS: //gm;t;d' <<< $(gcloud projects get-iam-policy $PROJECT_ID --flatten="bindings[].members" --format='table(bindings.members)' --filter="bindings.members:user:student*" |& tail -1))
+echo $FIRSTUSER
+gcloud projects remove-iam-policy-binding $PROJECT_ID --role='roles/viewer' --member $FIRSTUSER
+echo  $FIRSTUSER viewer iam removed
+
 export LASTUSER=$(sed -E 's/MEMBERS: //gm;t;d' <<< $(gcloud projects get-iam-policy $PROJECT_ID --flatten="bindings[].members" --format='table(bindings.members)' --filter="bindings.members:user:student*" |& tail -1))
-echo $LASTUSER 
+echo $LASTUSER
 gcloud projects add-iam-policy-binding $PROJECT_ID --role='roles/editor' --member $LASTUSER
+echo $LASTUSER viewer iam added
+
+echo  if access is not granted to engineer try this by replacing SECOND_EMAIL
+echo "gcloud projects add-iam-policy-binding $PROJECT_ID --role='roles/editor' --member user:SECOND_EMAIL"
+
+echo Do task 8 Manually
+echo https://console.cloud.google.com/monitoring/uptime
+kubectl get services
+kubectl get svc wordpress -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"
+echo use above mentioned as hostname 
+echo create uptime check manually and get the score
