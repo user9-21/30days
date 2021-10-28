@@ -4,7 +4,8 @@ gsutil cp -r gs://spls/gsp021/* .
 cd orchestrate-with-kubernetes/kubernetes
 ls
 kubectl create deployment nginx --image=nginx:1.10.0
-kubectl get pods\
+sleep 80
+kubectl get pods
 kubectl expose deployment nginx --port 80 --type LoadBalancer
 sleep 40
 kubectl get services
@@ -43,3 +44,5 @@ kubectl create -f deployments/frontend.yaml
 kubectl create -f services/frontend.yaml
 sleep 40
 kubectl get services frontend
+kubectl get services nginx
+kubectl get services
