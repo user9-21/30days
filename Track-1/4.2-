@@ -1,36 +1,25 @@
 gcloud config set compute/zone us-central1-f
-gcloud container clusters create spinnaker-tutorial \
-    --machine-type=n1-standard-2
-gcloud iam service-accounts create spinnaker-account \
-    --display-name spinnaker-account
-export SA_EMAIL=$(gcloud iam service-accounts list \
-    --filter="displayName:spinnaker-account" \
-    --format='value(email)')
+gcloud container clusters create spinnaker-tutorial --machine-type=n1-standard-2
+gcloud iam service-accounts create spinnaker-account --display-name spinnaker-account
+export SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:spinnaker-account"  --format='value(email)')
 export PROJECT=$(gcloud info --format='value(config.project)')
-gcloud projects add-iam-policy-binding $PROJECT \
-    --role roles/storage.admin \
-    --member serviceAccount:$SA_EMAIL	
-gcloud iam service-accounts keys create spinnaker-sa.json \
-     --iam-account $SA_EMAIL
-sleep 20
+gcloud projects add-iam-policy-binding $PROJECT --role='roles/storage.admin' --member serviceAccount:$SA_EMAIL
+gcloud iam service-accounts keys create spinnaker-sa.json --iam-account $SA_EMAIL
 gcloud pubsub topics create projects/$PROJECT/topics/gcr
-gcloud pubsub subscriptions create gcr-triggers \
-    --topic projects/${PROJECT}/topics/gcr
-export SA_EMAIL=$(gcloud iam service-accounts list \
-    --filter="displayName:spinnaker-account" \
-    --format='value(email)')
-gcloud beta pubsub subscriptions add-iam-policy-binding gcr-triggers \
-    --role roles/pubsub.subscriber --member serviceAccount:$SA_EMAIL
-kubectl create clusterrolebinding user-admin-binding \
-    --clusterrole=cluster-admin --user=$(gcloud config get-value account)
-kubectl create clusterrolebinding --clusterrole=cluster-admin \
-    --serviceaccount=default:default spinnaker-admin
+gcloud pubsub subscriptions create gcr-triggers --topic projects/${PROJECT}/topics/gcr
+export SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:spinnaker-account" --format='value(email)')
+gcloud beta pubsub subscriptions add-iam-policy-binding gcr-triggers --role roles/pubsub.subscriber --member serviceAccount:$SA_EMAIL
+kubectl create clusterrolebinding user-admin-binding --clusterrole=cluster-admin --user=$(gcloud config get-value account)
+kubectl create clusterrolebinding --clusterrole=cluster-admin --serviceaccount=default:default spinnaker-admin
+     
+sleep 20
+
 helm repo add stable https://charts.helm.sh/stable
 helm repo update
-export PROJECT=$(gcloud info \
-    --format='value(config.project)')
+export PROJECT=$(gcloud info --format='value(config.project)')
 export BUCKET=$PROJECT-spinnaker-config
 gsutil mb -c regional -l us-central1 gs://$BUCKET
+
 export SA_JSON=$(cat spinnaker-sa.json)
 export PROJECT=$(gcloud info --format='value(config.project)')
 export BUCKET=$PROJECT-spinnaker-config
@@ -70,16 +59,14 @@ halyard:
           --project $PROJECT \
           --message-format GCR
 EOF
-sleep 20
-helm install -n default cd stable/spinnaker -f spinnaker-config.yaml \
-           --version 2.0.0-rc9 --timeout 10m0s --wait
-export DECK_POD=$(kubectl get pods --namespace default -l "cluster=spin-deck" \
-    -o jsonpath="{.items[0].metadata.name}")
+
+helm install -n default cd stable/spinnaker -f spinnaker-config.yaml --version 2.0.0-rc9 --timeout 10m0s --wait
+export DECK_POD=$(kubectl get pods --namespace default -l "cluster=spin-deck"  -o jsonpath="{.items[0].metadata.name}")
 kubectl port-forward --namespace default $DECK_POD 8080:9000 >> /dev/null &
+
 tput bold; tput setaf 3 ;echo WEB PREVIEW ON PORT 80; tput sgr0;
 #Preview on Port 80
-sleep 10
-
+sleep 20
 gsutil -m cp -r gs://spls/gsp114/sample-app.tar .
 mkdir sample-app
 tar xvf sample-app.tar -C ./sample-app
@@ -94,12 +81,8 @@ git config credential.helper gcloud.sh
 export PROJECT=$(gcloud info --format='value(config.project)')
 git remote add origin https://source.developers.google.com/p/$PROJECT/r/sample-app
 git push origin master
-tput bold; tput setaf 3 ;echo Origin master pushed; tput sgr0;
-tput bold; tput setaf 3 ;echo BUILD TRIGGER MANUALLY THROUGH CONSOLE; tput sgr0;
-tput bold; tput setaf 3 ;echo After trigger build, run below command; tput sgr0;
-# build trigger manually through the console 
-
-cat > 2.sh <<EOF
+sleep 10
+gcloud beta builds triggers create cloud-source-repositories --repo=sample-app --tag-pattern=v1.* --build-config=cloudbuild.yaml
 export PROJECT=$(gcloud info --format='value(config.project)')
 gsutil mb -l us-central1 gs://$PROJECT-kubernetes-manifests
 gsutil versioning set on gs://$PROJECT-kubernetes-manifests
@@ -108,6 +91,13 @@ git commit -a -m "Set project ID"
 git tag v1.0.0
 git push --tags
 
+tput bold; tput setaf 3 ;echo Origin master pushed
+echo TRIGGER BUILD 
+echo NOW RUN TRIGGER MANUALLY THROUGH CONSOLE
+echo https://console.cloud.google.com/cloud-build/triggers; tput sgr0;
+tput bold; tput setaf 3 ;echo After trigger run succedded, run below command; tput sgr0;
+
+cat > 2.sh <<EOF
 
 curl -LO https://storage.googleapis.com/spinnaker-artifacts/spin/1.14.0/linux/amd64/spin
 chmod +x spin
@@ -115,7 +105,6 @@ chmod +x spin
                         --owner-email "$(gcloud config get-value core/account)" \
                         --cloud-providers kubernetes \
                         --gate-endpoint http://localhost:8080/gate
-					
 export PROJECT=$(gcloud info --format='value(config.project)')
 sed s/PROJECT/$PROJECT/g spinnaker/pipeline-deploy.json > pipeline.json
 ./spin pipeline save --gate-endpoint http://localhost:8080/gate -f pipeline.json
@@ -126,7 +115,7 @@ sed s/PROJECT/$PROJECT/g spinnaker/pipeline-deploy.json > pipeline.json
 tput bold; tput setaf 3 ;echo Now, Web Preview on port 80 to open spinnaker; tput sgr0;
 tput bold; tput setaf 3 ;echo Start MANUALLY Execution in spinnaker ; tput sgr0;
 tput bold; tput setaf 3 ;echo After Spinnaker succeeded, run below command; tput sgr0;
-
+sleep 10
 tput bold; tput setab 1 ;echo '
 chmod +x laststep.sh
 ./laststep.sh
