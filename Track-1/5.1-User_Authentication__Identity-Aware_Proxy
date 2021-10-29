@@ -4,17 +4,27 @@ cd user-authentication-with-iap
 cd 1-HelloWorld
 cat main.py
 gcloud app deploy
-
 gcloud app browse
+
+tput bold; tput setaf 3 ;echo 'if error in deploying run this in another terminal'; tput sgr0
+tput bold; tput setab 1 ;echo '
+cd user-authentication-with-iap
+cd 1-HelloWorld
+cat main.py
+gcloud app deploy
+gcloud app browse
+
+'; tput sgr0
 gcloud services enable iap.googleapis.com
 tput bold; tput setaf 3 ;echo create iap from console; tput sgr0
 tput bold; tput setaf 3 ;echo Navigate here   -            https://console.cloud.google.com/security/iap     ; tput sgr0
-tput bold; tput setaf 3 ;echo  press CTRL + C to override sleep of 200s; tput sgr0
+tput bold; tput setaf 3 ;tput blink;echo  WAIT; tput sgr0
 sleep 200
 
 gcloud services disable appengineflex.googleapis.com
 EMAIL=$(gcloud config get-value account)
 gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID --role roles/iap.httpsResourceAccessor --member user:$EMAIL
+
 sleep 100
 
 
