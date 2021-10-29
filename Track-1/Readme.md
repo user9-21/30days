@@ -135,7 +135,7 @@ chmod +x 1.sh
 
 ```
 
-## 5.5[Create an Internal Load Balancer](https://www.cloudskillsboost.google/focuses/1250?parent=catalog)
+## 5.5 [Create an Internal Load Balancer](https://www.cloudskillsboost.google/focuses/1250?parent=catalog)
 ```
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/5.5-Create_an_Internal_Load_Balancer
 chmod +x 1.sh
@@ -144,7 +144,7 @@ chmod +x 1.sh
 
 ```
 
-## 5.6[Build and Secure Networks in Google Cloud: Challenge Lab](https://www.cloudskillsboost.google/focuses/12068?parent=catalog)
+## 5.6 [Build and Secure Networks in Google Cloud: Challenge Lab](https://www.cloudskillsboost.google/focuses/12068?parent=catalog)
 ```
 wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/5.6-Build_and_Secure_Networks_in_Google_Cloud-Challenge_Lab
 chmod +x 1.sh
