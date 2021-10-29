@@ -1,0 +1,27 @@
+gsutil cp gs://spls/gsp499/user-authentication-with-iap.zip .
+unzip user-authentication-with-iap.zip
+cd user-authentication-with-iap
+cd 1-HelloWorld
+cat main.py
+gcloud app deploy
+
+gcloud app browse
+gcloud services enable iap.googleapis.com
+tput bold; tput setaf 3 ;echo create iap from console; tput sgr0
+tput bold; tput setaf 3 ;echo Navigate here   -            https://console.cloud.google.com/security/iap     ; tput sgr0
+tput bold; tput setaf 3 ;echo  press CTRL + C to override sleep of 200s; tput sgr0
+sleep 200
+
+gcloud services disable appengineflex.googleapis.com
+EMAIL=$(gcloud config get-value account)
+gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID --role roles/iap.httpsResourceAccessor --member user:$EMAIL
+sleep 100
+
+
+cd ~/user-authentication-with-iap/2-HelloUser
+gcloud app deploy
+
+sleep 60
+
+cd ~/user-authentication-with-iap/3-HelloVerifiedUser
+gcloud app deploy
