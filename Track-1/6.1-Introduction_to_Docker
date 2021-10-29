@@ -28,10 +28,10 @@ process.on('SIGINT', function() {
     process.exit();
 });
 EOF
+tput bold; tput setaf 3 ;echo File created; tput sgr0;
 docker build -t node-app:0.1 .
 docker images
-docker run -p 4000:80 --name my-app node-app:0.1
-tput bold; tput setaf 3 ;echo Now, Web Preview on port 80 to open docker; tput sgr0;
+
 sleep 5
 docker stop my-app && docker rm my-app
 docker run -p 4000:80 --name my-app -d node-app:0.1
@@ -53,4 +53,6 @@ docker push gcr.io/$project/node-app:0.2
 docker stop $(docker ps -q)
 docker rm $(docker ps -aq)
 docker pull gcr.io/$project/node-app:0.2
+tput bold; tput setaf 3 ;echo Now,Get the score; tput sgr0;
 docker run -p 4000:80 -d gcr.io/$project/node-app:0.2
+
