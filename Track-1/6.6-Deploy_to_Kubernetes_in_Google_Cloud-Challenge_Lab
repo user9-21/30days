@@ -31,9 +31,9 @@ cd marking
 tput bold; tput setaf 3 ;echo verify docker build is running ; tput sgr0;
 tput bold; tput setaf 3 ;echo after build run, run this code ; tput sgr0;
 cd ..
-cd valkyrie-app
-cat > 2.sh <<EOF
 
+cat > 2.sh <<EOF
+cd valkyrie-app
 docker tag valkyrie-app:v0.0.1 gcr.io/$GOOGLE_CLOUD_PROJECT/valkyrie-app:v0.0.1
 docker push gcr.io/$GOOGLE_CLOUD_PROJECT/valkyrie-app:v0.0.1
 sed -i s#IMAGE_HERE#gcr.io/$GOOGLE_CLOUD_PROJECT/valkyrie-app:v0.0.1#g k8s/deployment.yaml
@@ -118,7 +118,10 @@ EOF
 ls
 chmod +x 2.sh
 chmod +x laststep.sh
-echo file permission grantd
+echo file permission granted
+
+cp 2.sh valkyrie-app
+cp laststep.sh valkyrie-app
 tput bold; tput setab 1 ;echo '
 ./2.sh
 
