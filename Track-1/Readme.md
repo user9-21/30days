@@ -144,6 +144,14 @@ chmod +x 1.sh
 
 ```
 
+## 5.6[Build and Secure Networks in Google Cloud: Challenge Lab](https://www.cloudskillsboost.google/focuses/12068?parent=catalog)
+```
+wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/5.6-Build_and_Secure_Networks_in_Google_Cloud-Challenge_Lab
+chmod +x 1.sh
+./1.sh
+
+
+```
 
 ## 6.1 [Introduction to Docker](https://www.cloudskillsboost.google/focuses/1029?parent=catalog)
 ```
