@@ -145,26 +145,26 @@ chmod +x 1.sh
 ```
 
 
-## 
+## 6.1 [Introduction to Docker](https://www.cloudskillsboost.google/focuses/1029?parent=catalog)
 ```
-wget --output-document 1.sh 
+wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/6.1-Introduction_to_Docker
 chmod +x 1.sh
 ./1.sh
 
 
 ```
 
-## 
+## 6.5 [Continuous Delivery with Jenkins in Kubernetes Engine](https://www.cloudskillsboost.google/focuses/1104?parent=catalog)
 ```
-wget --output-document 1.sh 
+wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/6.5-Continuous_Delivery_with_Jenkins_in_Kubernetes_Engine
 chmod +x 1.sh
 ./1.sh
 
 
 ```
-## 
+## 6.6 [Deploy to Kubernetes in Google Cloud: Challenge Lab](https://www.cloudskillsboost.google/focuses/10457?parent=catalog)
 ```
-wget --output-document 1.sh 
+wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/6.6-Deploy_to_Kubernetes_in_Google_Cloud-Challenge_Lab
 chmod +x 1.sh
 ./1.sh
 
