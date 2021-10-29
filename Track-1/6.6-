@@ -19,18 +19,20 @@ sleep 10
 cd ..
 cd valkyrie-app
 docker run -p 8080:8080 valkyrie-app:v0.0.1 &
+tput bold; tput setaf 3 ;echo Now, Web Preview on port 80 ; tput sgr0;
+sleep 20
 cd ..
 cd marking
 ./step2.sh
 
 #preview on port 80
 
-tput bold; tput setaf 3 ;echo Now, Web Preview on port 80 ; tput sgr0;
+
 tput bold; tput setaf 3 ;echo verify docker build is running ; tput sgr0;
 tput bold; tput setaf 3 ;echo after build run, run this code ; tput sgr0;
-
-cat > 2.sh <<EOF
 cd ..
+cat > 2.sh <<EOF
+
 cd valkyrie-app
 docker tag valkyrie-app:v0.0.1 gcr.io/$GOOGLE_CLOUD_PROJECT/valkyrie-app:v0.0.1
 docker push gcr.io/$GOOGLE_CLOUD_PROJECT/valkyrie-app:v0.0.1
