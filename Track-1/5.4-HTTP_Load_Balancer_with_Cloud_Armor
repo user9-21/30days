@@ -22,6 +22,13 @@ sleep 10
 
 tput bold; tput setaf 3 ;echo siege-vm  created; tput sgr0
 
+gcloud compute health-checks create http http-health-check --port 80
+gcloud compute backend-services create http-backend --protocol=HTTP --port-name=http --health-checks=http-basic-check --global
+gcloud compute backend-services add-backend http-backend --instance-group=us-east1-mig --instance-group-region=us-east1  --balancing-mode=Rate --max-rate-per-instance=50 --global
+gcloud compute backend-services add-backend http-backend --instance-group=europe-west1-mig --instance-group-region=europe-west1  --balancing-mode=Utilization --global
+
+gcloud compute addresses create lb-ipv4-1 --ip-version=IPV4 --global
+gcloud compute addresses create lb-ipv6-1 --ip-version=IPV6  --global
 tput bold; tput setaf 3 ;echo Run this in siege-vm  instance; tput sgr0;
 tput bold; tput setab 1 ;echo '
 
@@ -30,11 +37,18 @@ sudo apt-get -y install siege
 exit
 
 '; tput sgr0;
-gcloud compute ssh siege-vm --zone us-central1-a --quiet
+gcloud compute ssh siege-vm --zone us-west1-c --quiet
 
 tput bold; tput setaf 3 ;echo Back in cloudshell; tput sgr0;
+
+tput bold; tput setaf 3 ;echo Configure load balancer properly in console; tput sgr0;
+tput bold; tput setaf 3 ;echo Navigate here - https://console.cloud.google.com/net-services/loadbalancing/loadBalancers/list; tput sgr0;
+
 export SIEGE_IP=$(gcloud compute instances list --filter='name:siege-vm' --format='value(EXTERNAL_IP)')
 echo $SIEGE_IP
 gcloud compute security-policies create denylist-siege
 gcloud compute security-policies rules create 1000 --action=deny-403 --security-policy=denylist-siege --src-ip-ranges=$SIEGE_IP
-gcloud compute backend-services update http-backend --security-policy=denylist-siege
+gcloud compute backend-services update http-backend --security-policy=denylist-siege --global
+tput bold; tput setaf 3 ;echo Configure load balancer properly in console; tput sgr0;
+tput bold; tput setaf 3 ;echo Navigate here - https://console.cloud.google.com/net-services/loadbalancing/loadBalancers/list
+echo Done with lab ; tput sgr0;
