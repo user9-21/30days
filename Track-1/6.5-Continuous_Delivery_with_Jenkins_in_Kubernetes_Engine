@@ -24,12 +24,14 @@ kubectl port-forward $POD_NAME 8080:8080 >> /dev/null &
 tput bold; tput setaf 3 ;echo WEB PREVIEW ON PORT 80; tput sgr0;
 #Preview on Port 80
 sleep 20
-tput bold; tput setaf 3 ;echo Helm installed > If yes procced else run this; tput sgr0;
+tput bold; tput setaf 3 ;echo Helm installed? If yes procced else run this; tput sgr0;
 tput bold; tput setab 2 ;echo '
 helm install cdd jenkins/jenkins -f jenkins/values.yaml --wait
 kubectl create clusterrolebinding jenkins-deploy --clusterrole=cluster-admin --serviceaccount=default:cd-jenkins
 export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/component=jenkins-master" -l "app.kubernetes.io/instance=cd" -o jsonpath="{.items[0].metadata.name}")
 kubectl port-forward $POD_NAME 8080:8080 >> /dev/null &
+kubectl get svc
+printf $(kubectl get secret cd-jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
 '; tput sgr0;
 
 kubectl get svc
