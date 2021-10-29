@@ -1,0 +1,15 @@
+
+gcloud compute firewall-rules delete open-access
+
+gcloud compute instances start bastion
+
+gcloud compute firewall-rules create accept-ssh-iap-ingress-ql-957 --allow=tcp:22 --source-ranges 35.235.240.0/20 --target-tags accept-ssh-iap-ingress-ql-957 --network acme-vpc
+gcloud compute instances add-tags bastion --tags=accept-ssh-iap-ingress-ql-957 --zone=us-central1-b
+
+
+gcloud compute firewall-rules create accept-http-ingress-ql-471 --allow=tcp:80 --source-ranges 0.0.0.0/0 --target-tags accept-http-ingress-ql-471 --network acme-vpc
+gcloud compute instances add-tags juice-shop --tags=accept-http-ingress-ql-471 --zone=us-central1-b
+
+
+gcloud compute firewall-rules create accept-ssh-internal-ingress-ql-490 --allow=tcp:22 --source-ranges 192.168.10.0/24 --target-tags accept-ssh-internal-ingress-ql-490 --network acme-vpc
+gcloud compute instances add-tags juice-shop --tags=accept-ssh-internal-ingress-ql-490 --zone=us-central1-b
