@@ -116,10 +116,19 @@ chmod +x 1.sh
 
 
 ```
-## 
+## 5.3 [VPC Networks - Controlling Access](https://www.cloudskillsboost.google/focuses/1231?parent=catalog)
 
 ```
-wget --output-document 1.sh 
+wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/5.3-VPC_Networks-Controlling_Access
+chmod +x 1.sh
+./1.sh
+
+
+```
+
+## 5.4 [HTTP Load Balancer with Cloud Armor](https://www.cloudskillsboost.google/focuses/1232?parent=catalog)
+```
+wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/5.4-HTTP_Load_Balancer_with_Cloud_Armor
 chmod +x 1.sh
 ./1.sh
 
@@ -128,16 +137,7 @@ chmod +x 1.sh
 
 ## 
 ```
-wget --output-document 1.sh 
-chmod +x 1.sh
-./1.sh
-
-
-```
-
-## 
-```
-wget --output-document 1.sh 
+wget --output-document 1.sh https://raw.githubusercontent.com/user9-21/30days/main/Track-1/5.5
 chmod +x 1.sh
 ./1.sh
 
