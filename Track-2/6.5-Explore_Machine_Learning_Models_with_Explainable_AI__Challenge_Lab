@@ -9,41 +9,6 @@ gcloud notebooks instances create instance-without-gpu \
   --location=us-central1-a
 gcloud notebooks instances list --location=us-central1-a
 
-
-
-cat > laststep.sh <<EOF
-tput bold;tput setaf 4;
-echo '
-# Run this  in jupyterlab
-
-git clone https://github.com/GoogleCloudPlatform/training-data-analyst
-PROJECT=$(gcloud config get-value core/project)
-cd training-data-analyst/quests/dei
-echo $PROJECT
-wget https://raw.githubusercontent.com/user9-21/30days/main/files/challenge-lab.ipynb
-sed -i s/#TODO/$PROJECT/g challenge-lab.ipynb
-
-# Navigate to training-data-analyst/quests/dei 
-# Copy PROJECT_ID and paste in the challenge-lab.ipynb file
-# and run all the command
-'; tput sgr0;
-EOF
-ls
-chmod +x laststep.sh
-gcloud compute scp laststep.sh instance-without-gpu:~
-
-
-tput bold;tput setab 1;
-echo '
-# retry this if error in ssh
-
-gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
-'
-
-cat laststep.sh
-
-
-
 STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)')
 echo $STATE
 sleep 10
@@ -53,6 +18,31 @@ done
 echo $STATE
 sleep 2
 while [ $STATE = ACTIVE ]; 
-do echo "preview on port 80 to open jupyterlab" && gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080 ; 
+do echo "preview on port 80 to open jupyterlab" ; 
 done
+
+tput bold;tput setab 1; echo '
+# retry this if error in ssh to notebook
+
+gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
+'; tput sgr0;
+
+tput bold; tput setaf 4; echo '
+
+# Run this  in jupyterlab
+
+git clone https://github.com/GoogleCloudPlatform/training-data-analyst
+PROJECT=$(gcloud config get-value core/project)
+cd training-data-analyst/quests/dei
+wget https://raw.githubusercontent.com/user9-21/30days/main/files/challenge-lab.ipynb
+sed -i s/#TODO/$PROJECT/g challenge-lab.ipynb
+echo $PROJECT
+
+
+# Navigate to training-data-analyst/quests/dei 
+# Copy PROJECT_ID and paste in the challenge-lab.ipynb file
+# and run all the command
+'; tput sgr0;
+
+gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
 
