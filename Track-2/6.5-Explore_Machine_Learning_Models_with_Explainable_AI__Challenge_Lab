@@ -9,26 +9,37 @@ gcloud notebooks instances create instance-without-gpu \
   --location=us-central1-a
 gcloud notebooks instances list --location=us-central1-a
 
+
+
 cat > laststep.sh <<EOF
 tput bold;tput setaf 4;
-# retry this if error in ssh
-
-gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
-
-# in jupyterlab
+echo '
+# Run this  in jupyterlab
 
 git clone https://github.com/GoogleCloudPlatform/training-data-analyst
 PROJECT=$(gcloud config get-value core/project)
 cd training-data-analyst/quests/dei
+echo $PROJECT
 wget https://raw.githubusercontent.com/user9-21/30days/main/files/challenge-lab.ipynb
-sed -i 's/#TODO/Your_Project_here/g' challenge-lab.ipynb
+sed -i s/#TODO/$PROJECT/g challenge-lab.ipynb
 
+# Navigate to training-data-analyst/quests/dei 
 # Copy PROJECT_ID and paste in the challenge-lab.ipynb file
 # and run all the command
-tput sgr0;
+'; tput sgr0;
 EOF
 ls
+
+tput bold;tput setab 1;
+echo '
+# retry this if error in ssh
+
+gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
+'
+
 cat laststep.sh
+
+
 
 STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)')
 echo $STATE
