@@ -17,9 +17,6 @@ do echo "WAIT" && sleep 120 && STATE=$(gcloud notebooks instances list --locatio
 done
 echo $STATE
 sleep 2
-while [ $STATE = ACTIVE ]; 
-do echo "preview on port 80 to open jupyterlab" ; 
-done
 
 tput bold;tput setab 1; echo '
 # retry this if error in ssh to notebook
@@ -44,5 +41,10 @@ echo $PROJECT
 # and run all the command
 '; tput sgr0;
 
-gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
+
+sleep 2
+while [ $STATE = ACTIVE ]; 
+do echo "preview on port 80 to open jupyterlab" && gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080 ; 
+done
+
 
