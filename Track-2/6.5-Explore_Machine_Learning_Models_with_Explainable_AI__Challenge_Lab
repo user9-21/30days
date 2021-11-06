@@ -29,6 +29,9 @@ sed -i s/#TODO/$PROJECT/g challenge-lab.ipynb
 '; tput sgr0;
 EOF
 ls
+chmod +x laststep.sh
+gcloud compute scp laststep.sh instance-without-gpu:~
+
 
 tput bold;tput setab 1;
 echo '
