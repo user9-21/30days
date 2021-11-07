@@ -6,7 +6,9 @@ echo $PROJECT_NUMBER
 gcloud compute instances create lamp-1-vm --project=$BUCKET_NAME --zone=us-central1-a --machine-type=n1-standard-2 --network-interface=network-tier=PREMIUM,subnet=default --maintenance-policy=MIGRATE --service-account=$PROJECT_NUMBER-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --tags=http-server --create-disk=auto-delete=yes,boot=yes,device-name=lamp-1-vmq,image=projects/debian-cloud/global/images/debian-10-buster-v20210916,mode=rw,size=10,type=projects/$BUCKET_NAME/zones/us-central1-a/diskTypes/pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
 
 cat > laststep.sh <<EOF
+
 # Run this in ssh
+
 sudo apt update
 sudo apt install apache2 php7.0 -y
 
@@ -20,12 +22,41 @@ sudo bash add-logging-agent-repo.sh
 sudo apt update
 sudo apt install google-fluentd
 
-# Now create Uptime check and alerting policy
-# https://console.cloud.google.com/monitoring/uptime
-# https://console.cloud.google.com/monitoring/alerting
-# Edit vm amd enable http traffic
-cat laststep.sh
 EOF
+
+tput bold;tput setaf 3; echo '
+> Now create Uptime check - https://console.cloud.google.com/monitoring/uptime
+ 
+ Title: Lamp Uptime Check
+ Protocol: HTTP
+ Resource Type: Instance
+ Applies to: Single, lamp-1-vm
+ Path: leave at default
+ Check Frequency: 1 min
+
+> Now create alerting policy - https://console.cloud.google.com/monitoring/alerting
+
+ Resource Type: VM Instance (gce_instance)
+ Metric: Network traffic (gce_instance+1)  -- agent.googleapis.com/interface/traffic:
+
+ Configuration: 
+   Condition: is above
+   Threshold: 500
+   For: 1 minute
+   
+ Click ADD
+ Click  Next
+ 
+ Alert name: Inbound Traffic Alert
+ 
+ Click  Save.
+
+> Edit vm amd enable http traffic - https://console.cloud.google.com/compute/instances
+';tput sgr0;
+
+chmod +x laststep.sh
+tput bold;tput setaf 6; echo 'permission granted';
 cat laststep.sh
 gcloud compute scp laststep.sh lamp-1-vm:~
-gcloud compute ssh lamp-1-vm
+
+gcloud compute ssh lamp-1-vm --zone=us-central1-a --quiet
