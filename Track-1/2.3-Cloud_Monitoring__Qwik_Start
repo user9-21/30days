@@ -3,7 +3,7 @@ export PROJECT_NUMBER=$(gcloud projects list --filter="$(gcloud config get-value
 echo $BUCKET_NAME
 echo $PROJECT_NUMBER
  
-gcloud compute instances create lamp-1-vm --project=$BUCKET_NAME --zone=us-central1-a --machine-type=n1-standard-2 --network-interface=network-tier=PREMIUM,subnet=default --maintenance-policy=MIGRATE --service-account=$PROJECT_NUMBER-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --tags=http-server --create-disk=auto-delete=yes,boot=yes,device-name=lamp-1-vmq,image=projects/debian-cloud/global/images/debian-10-buster-v20210916,mode=rw,size=10,type=projects/$BUCKET_NAME/zones/us-central1-a/diskTypes/pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
+gcloud compute instances create lamp-1-vm --project=$BUCKET_NAME --zone=us-central1-a --machine-type=n1-standard-2 --tags=http-server 
 
 cat > laststep.sh <<EOF
 
@@ -22,57 +22,26 @@ sudo bash add-logging-agent-repo.sh
 sudo apt update
 sudo apt install google-fluentd
 
-tput bold;tput setaf 3; echo '
-> Edit vm amd enable http traffic - https://console.cloud.google.com/compute/instances
+# Manual
 
-> Now create Uptime check - https://console.cloud.google.com/monitoring/uptime
+tput bold;tput setaf 3; echo '
+Now Allow http trapic in lamp-1-vm and click save - https://console.cloud.google.com/compute/instancesEdit/zones/us-central1-a/instances/lamp-1-vm 
+
+Now create Uptime check - https://console.cloud.google.com/monitoring/uptime
+ ';tput sgr0;
  
+tput bold;tput setaf 6; echo '
  Title: Lamp Uptime Check
  Protocol: HTTP
  Resource Type: Instance
  Applies to: Single, lamp-1-vm
  Path: leave at default
  Check Frequency: 1 min
-
-> Now create alerting policy - https://console.cloud.google.com/monitoring/alerting
-
- Resource Type: VM Instance (gce_instance)
- Metric: Network traffic (gce_instance+1)  -- agent.googleapis.com/interface/traffic:
-
- Configuration: 
-   Condition: is above
-   Threshold: 500
-   For: 1 minute
-   
- Click ADD
- Click  Next
- 
- Alert name: Inbound Traffic Alert
- 
- Click  Save.
-
 '
-
-
-
-EOF
-
-
-
 tput bold;tput setaf 3; echo '
-> Edit vm amd enable http traffic - https://console.cloud.google.com/compute/instances
-
-> Now create Uptime check - https://console.cloud.google.com/monitoring/uptime
- 
- Title: Lamp Uptime Check
- Protocol: HTTP
- Resource Type: Instance
- Applies to: Single, lamp-1-vm
- Path: leave at default
- Check Frequency: 1 min
-
-> Now create alerting policy - https://console.cloud.google.com/monitoring/alerting
-
+Now create alerting policy - https://console.cloud.google.com/monitoring/alerting
+';tput sgr0;
+tput bold;tput setaf 6; echo '
  Resource Type: VM Instance (gce_instance)
  Metric: Network traffic (gce_instance+1)  -- agent.googleapis.com/interface/traffic:
 
@@ -90,9 +59,39 @@ tput bold;tput setaf 3; echo '
 
 ';tput sgr0;
 
+
+EOF
+
+
 chmod +x laststep.sh
-tput bold;tput setaf 6; echo 'permission granted';
-cat laststep.sh
+tput bold;tput setaf 6; echo 'permission granted';tput sgr0;
+
+gcloud compute instances list
+
+tput bold; tput setaf 3; echo '
+# Run this in ssh
+
+./laststep.sh
+
+OR
+
+sudo apt update
+sudo apt install apache2 php7.0 -y
+sudo service apache2 restart
+curl -sSO https://dl.google.com/cloudagents/add-monitoring-agent-repo.sh
+sudo bash add-monitoring-agent-repo.sh
+sudo apt update
+sudo apt install stackdriver-agent -y
+curl -sSO https://dl.google.com/cloudagents/add-logging-agent-repo.sh
+sudo bash add-logging-agent-repo.sh
+sudo apt update
+sudo apt install google-fluentd
+
+';tput sgr0;
+
+
+
+
 gcloud compute scp laststep.sh lamp-1-vm:~
 
 gcloud compute ssh --zone=us-central1-a --quiet lamp-1-vm 
