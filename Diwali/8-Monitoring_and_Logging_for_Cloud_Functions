@@ -32,13 +32,13 @@ tput bold; tput setaf 3; echo "
 - In the Log name dropdown, select cloud-functions checkbox then click Add.
 - Click Run query.
 
-- In the Actions dropdown, click Create Metric.
+- Click Create Metric, in the Actions dropdown.
 - in the Create logs metric, Add following:
 
-  Metric Type = Distribution
-  Metric Name = CloudFunctionLatency-Logs
-  Field name = textPayload
-  Regular Expression field = execution took (\d+)
+  Metric Type: Distribution
+  Metric Name: CloudFunctionLatency-Logs
+  Field name: textPayload
+  Regular Expression field: execution took (\d+)
 
 - Click CREATE METRIC.
 - Done. Check score
