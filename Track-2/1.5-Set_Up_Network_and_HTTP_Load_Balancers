@@ -105,4 +105,15 @@ gcloud compute forwarding-rules create http-content-rule \
     --ports=80
 
 echo $IP_ADDRESS
+echo Browse here
+echo http://$IP_ADDRESS
+
+tput bold; tput setaf 3; echo '
+
+Run this in another terminal
+
+export IP_ADDRESS=$(gcloud compute forwarding-rules describe www-rule --format='value(IPAddress)')
+echo $IP_ADDRESS
 while true; do curl -m1 $IP_ADDRESS; done
+
+';
