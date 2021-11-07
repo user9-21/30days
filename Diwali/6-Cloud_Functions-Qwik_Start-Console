@@ -14,4 +14,5 @@ exports.helloWorld = (req, res) => {
 };
 EOF
 
+gcloud alpha functions add-iam-policy-binding GCFunction --region=us-central1 --member=allUsers --role=roles/cloudfunctions.invoker
 gcloud functions deploy GCFunction --runtime nodejs14 --trigger-http --max-instances 5 --entry-point helloWorld --quiet
