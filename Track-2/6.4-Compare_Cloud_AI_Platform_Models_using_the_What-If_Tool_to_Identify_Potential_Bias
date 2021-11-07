@@ -32,7 +32,7 @@ STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value
 echo $STATE
 sleep 10
 while [ $STATE = PROVISIONING ]; 
-do echo "WAIT" && sleep 120 && STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)') ; 
+do echo "WAIT" && sleep 2 && STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)') ; 
 done
 echo $STATE
 sleep 2
