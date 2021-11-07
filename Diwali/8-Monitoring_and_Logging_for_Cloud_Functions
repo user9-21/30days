@@ -14,30 +14,41 @@ exports.helloWorld = (req, res) => {
 };
 EOF
 
+tput bold; tput setaf 2; echo "
+Creating Function
+"; tput sgr0;
+
 gcloud functions deploy helloWorld --runtime nodejs14 --trigger-http --max-instances 5 --allow-unauthenticated
 
 wget 'https://github.com/tsenart/vegeta/releases/download/v6.3.0/vegeta-v6.3.0-linux-386.tar.gz'
 tar xvzf vegeta-v6.3.0-linux-386.tar.gz
-echo "GET https://us-central1-$GOOGLE_CLOUD_PROJECT.cloudfunctions.net/helloWorld" | ./vegeta attack -duration=300s > results.bin
+
+tput bold; tput setaf 1; echo "
+if error in creating function retry this on another terminal or create manually
+
+gcloud functions deploy helloWorld --runtime nodejs14 --trigger-http --max-instances 5 --allow-unauthenticated
+
+"; tput sgr0;
 
 tput bold; tput setaf 3; echo "
 - Navigate to Navigation menu > Logging > Logs Explorer
-- https://console.cloud.google.com/logs/query
+- Here - https://console.cloud.google.com/logs/query
+
 - in the Resource dropdown, select Cloud Function > helloWorld then click Add. 
 - In the Log name dropdown, select cloud-functions checkbox then click Add.
 - Click Run query.
 
 - In the Actions dropdown, click Create Metric.
-- in the Create logs metric:
-- Change the Metric Type to Distribution.
-- Name your metric CloudFunctionLatency-Logs.
-- Enter textPayload for Field name.
-- Enter the following in the Regular Expression field.
+- in the Create logs metric, Add following:
 
-execution took (\d+)
+  Metric Type = Distribution
+  Metric Name = CloudFunctionLatency-Logs
+  Field name = textPayload
+  Regular Expression field = execution took (\d+)
 
 - Click CREATE METRIC.
 - Done. Check score
 
 "; tput sgr0;
 
+echo "GET https://us-central1-$GOOGLE_CLOUD_PROJECT.cloudfunctions.net/helloWorld" | ./vegeta attack -duration=300s > results.bin
