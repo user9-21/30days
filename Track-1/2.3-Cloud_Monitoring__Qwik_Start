@@ -43,9 +43,10 @@ Now create alerting policy - https://console.cloud.google.com/monitoring/alertin
 ';tput sgr0;
 tput bold;tput setaf 6; echo '
  Resource Type: VM Instance (gce_instance)
- Metric: Network traffic (gce_instance+1)  -- agent.googleapis.com/interface/traffic:
+ Metric: agent.googleapis.com/interface/traffic
 
  Configuration: 
+ 
    Condition: is above
    Threshold: 500
    For: 1 minute
@@ -66,7 +67,46 @@ EOF
 chmod +x laststep.sh
 tput bold;tput setaf 6; echo 'permission granted';tput sgr0;
 
-gcloud compute instances list
+gcloud compute scp laststep.sh lamp-1-vm:~
+
+# Manual
+
+tput bold;tput setaf 3; echo '
+Now Allow http trapic in lamp-1-vm and click save - https://console.cloud.google.com/compute/instancesEdit/zones/us-central1-a/instances/lamp-1-vm 
+
+Now create Uptime check - https://console.cloud.google.com/monitoring/uptime
+ ';tput sgr0;
+ 
+tput bold;tput setaf 6; echo '
+ Title: Lamp Uptime Check
+ Protocol: HTTP
+ Resource Type: Instance
+ Applies to: Single, lamp-1-vm
+ Path: leave at default
+ Check Frequency: 1 min
+'
+tput bold;tput setaf 3; echo '
+Now create alerting policy - https://console.cloud.google.com/monitoring/alerting
+';tput sgr0;
+tput bold;tput setaf 6; echo '
+ Resource Type: VM Instance (gce_instance)
+ Metric: Network traffic (gce_instance+1)  -- agent.googleapis.com/interface/traffic:
+
+ Configuration: 
+   Condition: is above
+   Threshold: 500
+   For: 1 minute
+   
+ Click ADD
+ Click  Next
+ 
+ Alert name: Inbound Traffic Alert
+ 
+ Click  Save.
+
+';tput sgr0;
+
+
 
 tput bold; tput setaf 3; echo '
 # Run this in ssh
@@ -89,9 +129,5 @@ sudo apt install google-fluentd
 
 ';tput sgr0;
 
-
-
-
-gcloud compute scp laststep.sh lamp-1-vm:~
-
-gcloud compute ssh --zone=us-central1-a --quiet lamp-1-vm 
+gcloud compute instances list
+gcloud compute ssh --zone="us-central1-a" --quiet lamp-1-vm 
