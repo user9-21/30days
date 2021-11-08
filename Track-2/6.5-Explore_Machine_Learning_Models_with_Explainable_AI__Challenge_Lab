@@ -1,3 +1,13 @@
+red=`tput setaf 1`
+green=`tput setaf 2`
+yellow=`tput setaf 3`
+
+redb=`tput setab 1`
+blackb=`tput setab 0`
+
+bold=`tput bold`
+reset=`tput sgr0`
+
 gsutil mb gs://$GOOGLE_CLOUD_PROJECT
 gcloud services enable notebooks.googleapis.com
 gcloud compute images describe-from-family tf2-ent-2-6-cpu --project deeplearning-platform-release
@@ -9,42 +19,72 @@ gcloud notebooks instances create instance-without-gpu \
   --location=us-central1-a
 gcloud notebooks instances list --location=us-central1-a
 
-STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)')
-echo $STATE
-sleep 10
-while [ $STATE = PROVISIONING ]; 
-do echo "WAIT" && sleep 120 && STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)') ; 
-done
-echo $STATE
-sleep 2
 
-tput bold;tput setab 1; echo '
-# retry this if error in ssh to notebook
+cat > laststep.sh <<EOF
 
-gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
-'; tput sgr0;
+red=`tput setaf 1`
+green=`tput setaf 2`
+yellow=`tput setaf 3`
 
-tput bold; tput setaf 4; echo '
+redb=`tput setab 1`
+blackb=`tput setab 0`
 
-# Run this  in jupyterlab
+bold=`tput bold`
+reset=`tput sgr0`
+
+# Run this command in jupyterlab
+
 
 git clone https://github.com/GoogleCloudPlatform/training-data-analyst
-PROJECT=$(gcloud config get-value core/project)
+export PROJECT=$(gcloud config get-value core/project)
 cd training-data-analyst/quests/dei
 wget https://raw.githubusercontent.com/user9-21/30days/main/files/challenge-lab.ipynb
 sed -i s/#TODO/$PROJECT/g challenge-lab.ipynb
 echo $PROJECT
+wget https://files.consumerfinance.gov/hmda-historic-loan-data/hmda_2017_ny_all-records_labels.zip
+unzip hmda_2017_ny_all-records_labels.zip
 
 
-# Navigate to training-data-analyst/quests/dei 
-# Copy PROJECT_ID and paste in the challenge-lab.ipynb file
-# and run all the command
-'; tput sgr0;
+echo "${yellow}${bold}${blackb}
+                                                                                                                                                      
+                                                                                                                                                       
+# Navigate to training-data-analyst/quests/dei                                                                                                              
+# Copy PROJECT_ID and paste in the challenge-lab.ipynb file  (if not added)                                                                            
+# and run all the command                                                                                                                                   
+                                                                                                                                                            
+                                                                                                                                                            
+                                                                                                                                                            
+                                                                                                                                                            
+  ${reset}"
 
+EOF
 
-sleep 2
-while [ $STATE = ACTIVE ]; 
-do echo "preview on port 80 to open jupyterlab" && gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080 ; 
+PROJECT=$(gcloud config get-value core/project)
+gsutil mb gs://$PROJECT
+ls
+gsutil cp laststep.sh gs://$PROJECT
+
+STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)')
+echo $STATE
+sleep 10
+while [ $STATE = PROVISIONING ]; 
+do echo "PROVISIONING " && sleep 2 && STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)') ; 
 done
 
+while [ $STATE = ACTIVE ]; 
+do echo $STATE &&  echo "${yellow}${bold}preview on port 80 to open jupyterlab${reset}" && sleep 3 && echo "${redb}${bold}
 
+Run this in jupyterlab terminal
+
+PROJECT=$(gcloud config get-value core/project)
+gsutil cp gs://$PROJECT/laststep.sh /home/jupyter/
+chmod +x laststep.sh
+./laststep.sh
+
+${reset}" && gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080 ; 
+done
+
+echo "${redb}${bold}
+# retry this if error in ssh
+
+gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080${reset}"
