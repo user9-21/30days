@@ -4,7 +4,7 @@
 gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a  qwiklabs-tensorflow-notebook -- -L 8080:localhost:8080
 
 ```
-#### in ssh
+   ####      in jupyterlab terminal
 ```
 git clone https://github.com/GoogleCloudPlatform/training-data-analyst
 
