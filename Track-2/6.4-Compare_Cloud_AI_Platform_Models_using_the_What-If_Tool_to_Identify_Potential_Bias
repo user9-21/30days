@@ -1,7 +1,10 @@
 red=`tput setaf 1`
-redb=`tput setab 1`
 green=`tput setaf 2`
 yellow=`tput setaf 3`
+
+redb=`tput setab 1`
+blackb=`tput setab 0`
+
 bold=`tput bold`
 reset=`tput sgr0`
 
@@ -21,7 +24,13 @@ echo "${red}${bold}
 gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080${reset}"
 
 cat > laststep.sh <<EOF
+red=`tput setaf 1`
+green=`tput setaf 2`
 yellow=`tput setaf 3`
+
+redb=`tput setab 1`
+blackb=`tput setab 0`
+
 bold=`tput bold`
 reset=`tput sgr0`
 
@@ -30,14 +39,19 @@ reset=`tput sgr0`
 pip3 install xgboost==0.82 --user
 pip3 install scikit-learn==0.20.4 --user
 git clone https://github.com/GoogleCloudPlatform/training-data-analyst
-PROJECT=$(gcloud config get-value core/project)
-cd training-data-analyst/quests/dei/census
 echo $PROJECT
+cd training-data-analyst/quests/dei/census
 
-echo "${yellow}
-NAvigate to - training-data-analyst/quests/dei/census
+echo "${yellow}${bold}${blackb}
 
-Copy PROJECT_ID and paste in the income_xgboost.ipynb file and run all command${reset}"
+ 
+  NAvigate to - training-data-analyst/quests/dei/census
+
+  Copy PROJECT_ID - $PROJECT 
+  and paste in the income_xgboost.ipynb file 
+  and run all command
+  
+  ${reset}"
 EOF
 
 PROJECT=$(gcloud config get-value core/project)
@@ -53,7 +67,8 @@ do echo "PROVISIONING" && sleep 2 && STATE=$(gcloud notebooks instances list --l
 done
 
 while [ $STATE = ACTIVE ]; 
-do echo $STATE && echo "${yellow}${bold}preview on port 80 to open jupyterlab${reset}" && echo "${redb}
+do echo $STATE && echo "${yellow}${bold}preview on port 80 to open jupyterlab${reset}" && echo "${redb}${bold}
+
 Run this in jupyterlab terminal
 
 PROJECT=$(gcloud config get-value core/project)
