@@ -15,10 +15,10 @@ gcloud notebooks instances create instance-without-gpu \
   --location=us-central1-a
 gcloud notebooks instances list --location=us-central1-a
 
-
+echo "${red}${bold}
 # retry this if error in ssh
 
-gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
+gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080${reset}"
 
 cat > laststep.sh <<EOF
 yellow=`tput setaf 3`
