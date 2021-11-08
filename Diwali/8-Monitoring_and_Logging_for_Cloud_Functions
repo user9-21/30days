@@ -49,11 +49,8 @@ tput bold; tput setaf 3; echo "
 
 "; tput sgr0;
 
-gcloud functions deploy helloWorld --runtime nodejs14 --trigger-http --max-instances 5 --allow-unauthenticated
 
 
-wget 'https://github.com/tsenart/vegeta/releases/download/v6.3.0/vegeta-v6.3.0-linux-386.tar.gz'
-tar xvzf vegeta-v6.3.0-linux-386.tar.gz
 
 tput bold; tput setaf 1; echo "
 if error in creating function retry this on another terminal or create manually
@@ -62,5 +59,8 @@ gcloud functions deploy helloWorld --runtime nodejs14 --trigger-http --max-insta
 
 "; tput sgr0;
 
+sleep 40
 
+wget 'https://github.com/tsenart/vegeta/releases/download/v6.3.0/vegeta-v6.3.0-linux-386.tar.gz'
+tar xvzf vegeta-v6.3.0-linux-386.tar.gz
 echo "GET https://us-central1-$GOOGLE_CLOUD_PROJECT.cloudfunctions.net/helloWorld" | ./vegeta attack -duration=300s > results.bin
