@@ -41,11 +41,11 @@ reset=`tput sgr0`
 echo $PROJECT
 pip3 install xgboost --user
 git clone https://github.com/GoogleCloudPlatform/training-data-analyst
-cd training-data-analyst/quests/dei
 PROJECT=$(gcloud config get-value core/project)
 BUCKET=$(gsutil ls)
-sed -i "s/YOUR_GCP_PROJECT/$PROJECT/g" xgboost_caip_e2e.ipynb
-sed -i "s/your_storage_bucket/$BUCKET/g" xgboost_caip_e2e.ipynb
+cd training-data-analyst/quests/dei
+sed -i s/YOUR_GCP_PROJECT/$PROJECT/g xgboost_caip_e2e.ipynb
+sed -i s/your_storage_bucket/$PROJECT/g xgboost_caip_e2e.ipynb
 sed -i 's/your_model_name/newModel/g' xgboost_caip_e2e.ipynb
 
 echo $PROJECT && echo $BUCKET
