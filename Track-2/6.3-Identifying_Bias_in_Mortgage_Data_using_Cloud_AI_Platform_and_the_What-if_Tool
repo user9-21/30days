@@ -1,42 +1,90 @@
+red=`tput setaf 1`
+green=`tput setaf 2`
+yellow=`tput setaf 3`
+
+redb=`tput setab 1`
+blackb=`tput setab 0`
+
+bold=`tput bold`
+reset=`tput sgr0`
+
 gsutil mb gs://$GOOGLE_CLOUD_PROJECT
 gcloud services enable notebooks.googleapis.com
-gcloud compute images describe-from-family tf2-ent-2-3-cpu --project deeplearning-platform-release
+gcloud compute images describe-from-family tf2-ent-2-6-cpu --project deeplearning-platform-release
 
 gcloud notebooks instances create instance-without-gpu \
   --vm-image-project=deeplearning-platform-release \
-  --vm-image-family=tf2-ent-2-3-cpu \
+  --vm-image-family=tf2-ent-2-6-cpu \
   --machine-type=n1-standard-4 \
   --location=us-central1-a
 gcloud notebooks instances list --location=us-central1-a
 
+echo "${red}${bold}
+# retry this if error in ssh
+
+gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet  --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080${reset}"
+
 cat > laststep.sh <<EOF
 
-#if error in ssh, retry this
+red=`tput setaf 1`
+green=`tput setaf 2`
+yellow=`tput setaf 3`
 
-gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT  --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080
+redb=`tput setab 1`
+blackb=`tput setab 0`
+
+bold=`tput bold`
+reset=`tput sgr0`
 
 # Run this command in jupyterlab
 
+echo $PROJECT
 pip3 install xgboost --user
 git clone https://github.com/GoogleCloudPlatform/training-data-analyst
 cd training-data-analyst/quests/dei
 PROJECT=$(gcloud config get-value core/project)
 BUCKET=$(gsutil ls)
-sed -i "s/YOUR_GCP_PROJECT/$PROJECT/g" xgboost_caip_e2e.ipynb && sed -i "s#MODEL_BUCKET = 'your_storage_bucket'#MODEL_BUCKET = '$BUCKET'#g" xgboost_caip_e2e.ipynb && sed -i 's/your_model_name/newModel/g' xgboost_caip_e2e.ipynb
+sed -i "s/YOUR_GCP_PROJECT/$PROJECT/g" xgboost_caip_e2e.ipynb
+sed -i "s/your_storage_bucket/$BUCKET/g" xgboost_caip_e2e.ipynb
+sed -i 's/your_model_name/newModel/g' xgboost_caip_e2e.ipynb
 
 echo $PROJECT && echo $BUCKET
-# Now Navigate to training-data-analyst/quests/dei and execute xgboost_caip_e2e.ipynb. 
+
+
+echo "${yellow}${bold}${blackb}
+
+ 
+  NAvigate to - training-data-analyst/quests/dei
+
+  Copy PROJECT_ID - $PROJECT & Bucket (if not added)
+  and paste in the xgboost_caip_e2e.ipynb file 
+  and run all command
+  
+  ${reset}"
 
 EOF
-cat laststep.sh
+
+PROJECT=$(gcloud config get-value core/project)
+gsutil mb gs://$PROJECT
+ls
+gsutil cp laststep.sh gs://$PROJECT
+
 STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)')
 echo $STATE
 sleep 10
 while [ $STATE = PROVISIONING ]; 
-do echo "WAIT" && sleep 120 && STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)') ; 
+do echo "PROVISIONING " && sleep 2 && STATE=$(gcloud notebooks instances list --location=us-central1-a --format='value(STATE)') ; 
 done
-echo $STATE
-sleep 2
+
 while [ $STATE = ACTIVE ]; 
-do echo "preview on port 80 to open jupyterlab" && gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080 ; 
+do echo $STATE &&  echo "${yellow}${bold}preview on port 80 to open jupyterlab${reset}" &&  echo "${redb}${bold}
+
+Run this in jupyterlab terminal
+
+PROJECT=$(gcloud config get-value core/project)
+gsutil cp gs://$PROJECT/laststep.sh /home/jupyter/
+chmod +x laststep.sh
+./laststep.sh
+
+${reset}" && gcloud compute ssh --project $GOOGLE_CLOUD_PROJECT --quiet --zone us-central1-a   instance-without-gpu -- -L 8080:localhost:8080 ; 
 done
